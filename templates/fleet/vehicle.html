@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>{{ vehicle_name }}</title>
+  </head>
+  <body style="overflow-y:scroll;">
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'station #' station_id %}">{{ station_name }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ vehicle_name }}</li>
+      </ol>
+    </nav>
+
+    <form>
+      <div class="accordion" id="bags_accordion">
+
+        {% for bag in bags %}
+            <div class="card">
+
+              <div class="card-header" id="heading{{ bag.bag.pk }}">
+                <h2 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse{{ bag.bag.pk }}" aria-expanded="true" aria-controls="collapse{{ bag.bag.pk }}">
+                    {{ bag.bag.name }} - {{ bag.quantity }} (ea)
+                  </button>
+                </h2>
+              </div>
+
+              <div id="collapse{{ bag.bag.pk }}" class="collapse" aria-labelledby="heading{{ bag.bag.pk }}" data-parent="#bags_accordion">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-3 col-sm-6">
+
+                      {% for bag_compartment in bag.bag.bagcompartmentassociation_set.all %}
+                          <div class="text-center mb-1" style="background-color:lightgrey;">
+                            {{ bag_compartment.compartment.name }}
+                          </div>
+
+                          {% for item in bag_compartment.compartment.compartmentitemassociation_set.all %}
+                              <div class="form-group row mb-0">
+                                <div class="col-sm-2">
+                                  <input type="text" class="form-control form-control-sm" id="input{{ item.item.pk }}" placeholder="">
+                                </div>
+
+                                {# TODO use extend for them item block below x3 #}
+                                <div class="col-sm-10 pl-0">
+                                  <label for="input{{ item.item.pk }}" class="col-form-label col-form-label">
+                                    {{ item.quantity }} {{ item.item.name }}{% if item.item.size %}, {{ item.item.size }}{% endif %}
+                                    {% if item.item.notes %}({{ item.item.notes }}){% endif %}
+                                    {% if item.item.brand %}by {{ item.item.brand }}{% endif %}
+                                  </label>
+                                </div>
+                              </div>
+                          {% endfor %}
+
+                          {% for kit in bag_compartment.compartment.compartmentkitassociation_set.all %}
+                              <div class="row pt-1">
+                                <div class="col-12 text-center">
+                                  {{ kit.kit.name }}
+                                </div>
+                              </div>
+
+                              {% for item in kit.kit.kititemassociation_set.all %}
+                                  <div class="form-group row mb-0">
+                                    <div class="col-sm-2">
+                                      <input type="text" class="form-control form-control-sm" id="input{{ item.item.pk }}" placeholder="">
+                                    </div>
+                                    <div class="col-sm-10 pl-0">
+                                      <label for="input{{ item.item.pk }}" class="col-form-label col-form-label">
+                                        {{ item.quantity }} {{ item.item.name }}{% if item.item.size %}, {{ item.item.size }}{% endif %}
+                                        {% if item.item.notes %}({{ item.item.notes }}){% endif %}
+                                        {% if item.item.brand %}by {{ item.item.brand }}{% endif %}
+                                      </label>
+                                    </div>
+                                  </div>
+                              {% endfor %}
+
+                              {% for kit_compartment in kit.kit.kitcompartmentassociation_set.all %}
+                                  <div class="row pt-3 mb-1">
+                                    <div class="col-12 mt-n3 text-center text-secondary">
+                                      {{ kit_compartment.compartment.name }}
+                                    </div>
+                                  </div>
+
+                                  {% for item in kit_compartment.compartment.compartmentitemassociation_set.all %}
+                                      <div class="form-group row mb-0">
+                                        <div class="col-sm-2">
+                                          <input type="text" class="form-control form-control-sm" id="input{{ item.item.pk }}" placeholder="">
+                                        </div>
+                                        <div class="col-sm-10 pl-0">
+                                          <label for="input{{ item.item.pk }}" class="col-form-label col-form-label">
+                                            {{ item.quantity }} {{ item.item.name }}{% if item.item.size %}, {{ item.item.size }}{% endif %}
+                                            {% if item.item.notes %}({{ item.item.notes }}){% endif %}
+                                            {% if item.item.brand %}by {{ item.item.brand }}{% endif %}
+                                          </label>
+                                        </div>
+                                      </div>
+                                  {% endfor %}
+
+                                  {% if kit_compartment.compartment.name in new_column_cutoffs %}
+                                      </div>
+                                      <div class="col-md-3 col-sm-6">
+                                  {% endif %}
+
+                              {% endfor %}  <!-- /kit>kit_compartment -->
+                          {% endfor %}  <!-- /kit -->
+
+                          {% if bag_compartment.compartment.name  in new_column_cutoffs %}
+                              </div>
+                              <div class="col-md-3 col-sm-6">
+                          {% endif %}
+
+                      {% endfor %} <!-- /bag_compartment -->
+                    </div>  {# /col #}
+                  </div>  {# /row #}
+                </div>  {# card-body #}
+              </div>  {# collapse #}
+
+            </div> {# /card #}
+
+        {% endfor %}  {# /bag in bags #}
+      </div> {# /accordion #}
+
+      <div class="row mt-2 justify-content-center">
+        <div class="col-md-2">
+          <button type="button" class="btn btn-primary btn-block">Order</button>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
