@@ -5,39 +5,39 @@ from inventory.models import Bag, Compartment, Item, Kit
 
 class DummyTestCase(TestCase):
     def setUp(self):
-        itemOne = Item.objects.create(name='ItemOne')
-        itemTwo = Item.objects.create(name='ItemTwo')
+        item_one = Item.objects.create(name='ItemOne')
+        item_two = Item.objects.create(name='ItemTwo')
 
-        kitOne = Kit.objects.create(name='KitOne')
-        kitOne.items.add(itemOne, through_defaults={'quantity': 2, 'ordering': 3})
+        kit_one = Kit.objects.create(name='KitOne')
+        kit_one.items.add(item_one, through_defaults={'quantity': 2, 'ordering': 3})
 
-        kitTwo = Kit.objects.create(name='KitTwo')
-        kitTwo.items.add(itemOne, through_defaults={'quantity': 4, 'ordering': 5})
-        kitTwo.items.add(itemTwo, through_defaults={'quantity': 6, 'ordering': 7})
+        kit_two = Kit.objects.create(name='KitTwo')
+        kit_two.items.add(item_one, through_defaults={'quantity': 4, 'ordering': 5})
+        kit_two.items.add(item_two, through_defaults={'quantity': 6, 'ordering': 7})
 
-        compartmentOne = Compartment.objects.create(name='CompartmentOne')
-        compartmentOne.items.add(itemOne, through_defaults={'quantity': 8, 'ordering': 9})
-        compartmentOne.kits.add(kitOne, through_defaults={'ordering': 10})
-        compartmentOne.kits.add(kitTwo, through_defaults={'ordering': 11})
+        compartment_one = Compartment.objects.create(name='CompartmentOne')
+        compartment_one.items.add(item_one, through_defaults={'quantity': 8, 'ordering': 9})
+        compartment_one.kits.add(kit_one, through_defaults={'ordering': 10})
+        compartment_one.kits.add(kit_two, through_defaults={'ordering': 11})
 
-        compartmentTwo = Compartment.objects.create(name='CompartmentTwo')
-        compartmentTwo.items.add(itemTwo, through_defaults={'quantity': 12, 'ordering': 13})
+        compartment_two = Compartment.objects.create(name='CompartmentTwo')
+        compartment_two.items.add(item_two, through_defaults={'quantity': 12, 'ordering': 13})
 
-        bagOne = Bag.objects.create(name='BagOne')
-        bagOne.compartments.add(compartmentOne, through_defaults={'ordering': 14})
-        bagOne.compartments.add(compartmentTwo, through_defaults={'ordering': 15})
+        bag_one = Bag.objects.create(name='BagOne')
+        bag_one.compartments.add(compartment_one, through_defaults={'ordering': 14})
+        bag_one.compartments.add(compartment_two, through_defaults={'ordering': 15})
 
     def test_it_works(self):
         bags = Bag.objects.all()
         for bag in bags:
             print(f'Bag name={bag.name}')
-            for bagCompartment in bag.bagcompartmentassociation_set.all():
-                print(f'  Compartment name={bagCompartment.compartment.name} ordering={bagCompartment.ordering}')
-                for comparmentItem in bagCompartment.compartment.compartmentitemassociation_set.all():
-                    print(f'    Item name={comparmentItem.item.name} quantity={comparmentItem.quantity} '
-                          f'ordering={comparmentItem.ordering}')
-                for compartmentKit in bagCompartment.compartment.compartmentkitassociation_set.all():
-                    print(f'    Kit name={compartmentKit.kit.name} ordering={compartmentKit.ordering}')
-                    for kitItem in compartmentKit.kit.kititemassociation_set.all():
-                        print(f'      Item name={kitItem.item.name} quantity={kitItem.quantity} '
-                              f'ordering={kitItem.ordering}')
+            for bag_compartment in bag.bagcompartmentassociation_set.all():
+                print(f'  Compartment name={bag_compartment.compartment.name} ordering={bag_compartment.ordering}')
+                for comparment_item in bag_compartment.compartment.compartmentitemassociation_set.all():
+                    print(f'    Item name={comparment_item.item.name} quantity={comparment_item.quantity} '
+                          f'ordering={comparment_item.ordering}')
+                for compartment_kit in bag_compartment.compartment.compartmentkitassociation_set.all():
+                    print(f'    Kit name={compartment_kit.kit.name} ordering={compartment_kit.ordering}')
+                    for kit_item in compartment_kit.kit.kititemassociation_set.all():
+                        print(f'      Item name={kit_item.item.name} quantity={kit_item.quantity} '
+                              f'ordering={kit_item.ordering}')
