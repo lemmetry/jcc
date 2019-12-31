@@ -43,8 +43,13 @@ def vehicle(request, station_id, vehicle_path):
     vehicle_name = vehicle_path.replace('_', ' ')  # TODO I don't like this part.
     vehicle_name = vehicle_name.capitalize()       # TODO Create vehicle_id field instead?
     vehicle = Vehicle.objects.filter(name=vehicle_name)[0]
+    vehicle_bags = vehicle.vehiclebagassociation_set.all()
 
-    bags = vehicle.vehiclebagassociation_set.all()
+    vehicle_items = []
+    for vehicle_bag in vehicle_bags:
+        bag_items = vehicle_bag.bag.get_bag_items()
+        vehicle_items += bag_items
+
     new_column_cutoffs = ['ETT Side',
                           'Under Syringes',
                           'Left Outside Pocket',
@@ -52,12 +57,12 @@ def vehicle(request, station_id, vehicle_path):
                           'Top Outside Flap',
                           'Inside Bag Main']
     context = {
-        'bags': bags,
+        'station_id': station_id,
         'station_name': station_name,
         'station_path': station_path,
-        'station_id': station_id,
         'vehicle_name': vehicle_name,
         'vehicle_path': vehicle_path,
+        'vehicle_bags': vehicle_bags,
         'new_column_cutoffs': new_column_cutoffs
     }
     template = 'vehicle.html'

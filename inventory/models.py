@@ -71,6 +71,44 @@ class Bag(ContainerCommonInfo):
     compartments = models.ManyToManyField(Compartment,
                                           through='BagCompartmentAssociation')
 
+    def get_bag_items(self):
+        models_to_visit = [self]
+        bag_items = []
+        while len(models_to_visit) > 0:
+            model_to_visit = models_to_visit.pop()
+
+            if isinstance(model_to_visit, Bag):
+                # Bag may have Compartments
+                bag_compartments = model_to_visit.bagcompartmentassociation_set.all()
+                for bag_compartment in bag_compartments:
+                    models_to_visit.append(bag_compartment.compartment)
+            elif isinstance(model_to_visit, Compartment):
+                # Compartment may have Items and/or ...
+                compartment_items = model_to_visit.compartmentitemassociation_set.all()
+                for compartment_item in compartment_items:
+                    bag_items.append(compartment_item.item)
+
+                # ... Compartment may have Kits
+                compartment_kits = model_to_visit.compartmentkitassociation_set.all()
+                for compartment_kit in compartment_kits:
+                    models_to_visit.append(compartment_kit.kit)
+            elif isinstance(model_to_visit, Kit):
+                # Kit may have Items and/or ...
+                kit_items = model_to_visit.kititemassociation_set.all()
+                for kit_item in kit_items:
+                    bag_items.append(kit_item.item)
+
+                # ... Kit may have Compartments
+                kit_compartments = model_to_visit.kitcompartmentassociation_set.all()
+                for kit_compartment in kit_compartments:
+                    models_to_visit.append(kit_compartment.compartment)
+            elif isinstance(model_to_visit, Item):
+                bag_items.append(model_to_visit)
+            else:
+                raise Exception('You... shall... not... pass!')
+
+        return bag_items
+
     def __str__(self):
         return self.name
 
