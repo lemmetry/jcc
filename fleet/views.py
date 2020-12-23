@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from .models import Station
 from .models import Vehicle
-from .models import Bag
-from .models import VehicleBagAssociation
 
 
 def home(request):
@@ -52,7 +50,7 @@ def vehicle(request, station_id, vehicle_path):
                           'Top Outside Flap',
                           'Inside Bag Main']
     context = {
-        'bags': bags,
+        'vehicle_bags': bags,
         'station_name': station_name,
         'station_path': station_path,
         'station_id': station_id,

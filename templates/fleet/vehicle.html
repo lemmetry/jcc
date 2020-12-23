@@ -23,23 +23,23 @@
     <form>
       <div class="accordion" id="bags_accordion">
 
-        {% for bag in bags %}
+        {% for vehicle_bag in vehicle_bags %}
             <div class="card">
 
-              <div class="card-header" id="heading{{ bag.bag.pk }}">
+              <div class="card-header" id="heading{{ vehicle_bag.bag.pk }}">
                 <h2 class="mb-0">
-                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse{{ bag.bag.pk }}" aria-expanded="true" aria-controls="collapse{{ bag.bag.pk }}">
-                    {{ bag.bag.name }} - {{ bag.quantity }} (ea)
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse{{ vehicle_bag.bag.pk }}" aria-expanded="true" aria-controls="collapse{{ vehicle_bag.bag.pk }}">
+                    {{ vehicle_bag.bag.name }} - {{ vehicle_bag.quantity }} (ea)
                   </button>
                 </h2>
               </div>
 
-              <div id="collapse{{ bag.bag.pk }}" class="collapse" aria-labelledby="heading{{ bag.bag.pk }}" data-parent="#bags_accordion">
+              <div id="collapse{{ vehicle_bag.bag.pk }}" class="collapse" aria-labelledby="heading{{ vehicle_bag.bag.pk }}" data-parent="#bags_accordion">
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-3 col-sm-6">
 
-                      {% for bag_compartment in bag.bag.bagcompartmentassociation_set.all %}
+                      {% for bag_compartment in vehicle_bag.bag.bagcompartmentassociation_set.all %}
                           <div class="text-center mb-1" style="background-color:lightgrey;">
                             {{ bag_compartment.compartment.name }}
                           </div>
