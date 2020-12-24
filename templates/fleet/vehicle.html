@@ -39,36 +39,37 @@
                   <div class="row">
                     <div class="col-md-3 col-sm-6">
 
-                      {% for bag_compartment in vehicle_bag.bag.bagcompartmentassociation_set.all %}
+                      {% for bag_compartment in vehicle_bag.bag.bagcompartment_set.all %}
                           <div class="text-center mb-1" style="background-color:lightgrey;">
-                            {{ bag_compartment.compartment.name }}
+                            {{ bag_compartment.name }}
                           </div>
 
-                          {% for item in bag_compartment.compartment.compartmentitemassociation_set.all %}
+                          {% for item in bag_compartment.items.all %}
                               <div class="form-group row mb-0">
                                 <div class="col-sm-2">
-                                  <input type="text" class="form-control form-control-sm" id="input{{ item.item.pk }}" placeholder="">
+                                  <input type="text" class="form-control form-control-sm" id="input{{ item.pk }}" placeholder="">
                                 </div>
 
                                 {# TODO use extend for them item block below x3 #}
                                 <div class="col-sm-10 pl-0">
-                                  <label for="input{{ item.item.pk }}" class="col-form-label col-form-label">
-                                    {{ item.quantity }} {{ item.item.name }}{% if item.item.size %}, {{ item.item.size }}{% endif %}
-                                    {% if item.item.notes %}({{ item.item.notes }}){% endif %}
-                                    {% if item.item.brand %}by {{ item.item.brand }}{% endif %}
+                                  <label for="input{{ item.pk }}" class="col-form-label col-form-label">
+                                  {# TODO replace ___x below with required quantity #}
+                                    ___x {{ item.name }}{% if item.size %}, {{ item.size }}{% endif %}
+                                    {% if item.notes %}({{ item.notes }}){% endif %}
+                                    {% if item.brand %}by {{ item.brand }}{% endif %}
                                   </label>
                                 </div>
                               </div>
                           {% endfor %}
 
-                          {% for kit in bag_compartment.compartment.compartmentkitassociation_set.all %}
+                          {% for kit in bag_compartment.kit_set.all %}
                               <div class="row pt-1">
                                 <div class="col-12 text-center">
-                                  {{ kit.kit.name }}
+                                  {{ kit.name }}
                                 </div>
                               </div>
 
-                              {% for item in kit.kit.kititemassociation_set.all %}
+                              {% for item in kit.kit.kititemassociation_set.all %} _f3
                                   <div class="form-group row mb-0">
                                     <div class="col-sm-2">
                                       <input type="text" class="form-control form-control-sm" id="input{{ item.item.pk }}" placeholder="">
@@ -83,29 +84,30 @@
                                   </div>
                               {% endfor %}
 
-                              {% for kit_compartment in kit.kit.kitcompartmentassociation_set.all %}
+                              {% for kit_compartment in kit.kitcompartment_set.all %}
                                   <div class="row pt-3 mb-1">
                                     <div class="col-12 mt-n3 text-center text-secondary">
-                                      {{ kit_compartment.compartment.name }}
+                                      {{ kit_compartment.name }}
                                     </div>
                                   </div>
 
-                                  {% for item in kit_compartment.compartment.compartmentitemassociation_set.all %}
+                                  {% for item in kit_compartment.items.all %}
                                       <div class="form-group row mb-0">
                                         <div class="col-sm-2">
-                                          <input type="text" class="form-control form-control-sm" id="input{{ item.item.pk }}" placeholder="">
+                                          <input type="text" class="form-control form-control-sm" id="input{{ item.pk }}" placeholder="">
                                         </div>
                                         <div class="col-sm-10 pl-0">
-                                          <label for="input{{ item.item.pk }}" class="col-form-label col-form-label">
-                                            {{ item.quantity }} {{ item.item.name }}{% if item.item.size %}, {{ item.item.size }}{% endif %}
-                                            {% if item.item.notes %}({{ item.item.notes }}){% endif %}
-                                            {% if item.item.brand %}by {{ item.item.brand }}{% endif %}
+                                          <label for="input{{ item.pk }}" class="col-form-label col-form-label">
+                                          {# TODO replace ___x below with required quantity #}
+                                            ___x {{ item.name }}{% if item.size %}, {{ item.size }}{% endif %}
+                                            {% if item.notes %}({{ item.notes }}){% endif %}
+                                            {% if item.brand %}by {{ item.brand }}{% endif %}
                                           </label>
                                         </div>
                                       </div>
                                   {% endfor %}
 
-                                  {% if kit_compartment.compartment.name in new_column_cutoffs %}
+                                  {% if kit_compartment.name in new_column_cutoffs %} _f4
                                       </div>
                                       <div class="col-md-3 col-sm-6">
                                   {% endif %}
@@ -113,7 +115,7 @@
                               {% endfor %}  <!-- /kit>kit_compartment -->
                           {% endfor %}  <!-- /kit -->
 
-                          {% if bag_compartment.compartment.name  in new_column_cutoffs %}
+                          {% if bag_compartment.name  in new_column_cutoffs %}
                               </div>
                               <div class="col-md-3 col-sm-6">
                           {% endif %}

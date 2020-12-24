@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from inventory.models import Bag, Compartment, Item, Kit
+from inventory.models import Bag, BagCompartment, Item, Kit
 
 
 class DummyTestCase(TestCase):
@@ -15,12 +15,12 @@ class DummyTestCase(TestCase):
         kit_two.items.add(item_one, through_defaults={'quantity': 4, 'ordering': 5})
         kit_two.items.add(item_two, through_defaults={'quantity': 6, 'ordering': 7})
 
-        compartment_one = Compartment.objects.create(name='CompartmentOne')
+        compartment_one = BagCompartment.objects.create(name='CompartmentOne')
         compartment_one.items.add(item_one, through_defaults={'quantity': 8, 'ordering': 9})
         compartment_one.kits.add(kit_one, through_defaults={'ordering': 10})
         compartment_one.kits.add(kit_two, through_defaults={'ordering': 11})
 
-        compartment_two = Compartment.objects.create(name='CompartmentTwo')
+        compartment_two = BagCompartment.objects.create(name='CompartmentTwo')
         compartment_two.items.add(item_two, through_defaults={'quantity': 12, 'ordering': 13})
 
         bag_one = Bag.objects.create(name='BagOne')

@@ -14,6 +14,88 @@ class ContainerCommonInfo(models.Model):
         ordering = ['name']
 
 
+class Bag(ContainerCommonInfo):
+    # Collection of compartments/pockets/pouches, see class Compartments for content.
+    # May also hold loose items (optional) for single space bags (no compartmentalization).
+
+    def __str__(self):
+        return self.name
+
+
+class BagCompartment(ContainerCommonInfo):
+    # Section of the bag that holds items and other kits.
+    # For example "Main Top Compartment", "Top Outside Pouch", etc.
+
+    bag = models.ForeignKey(Bag,
+                            blank=True,
+                            null=True,
+                            on_delete=models.CASCADE)
+    items = models.ManyToManyField('Item',
+                                   blank=True,
+                                   null=True)
+
+    def get_bag_name(self):
+        try:
+            bag_name = self.bag.name
+            return bag_name
+        except AttributeError:
+            return "Not Yet Assigned To Any Bags"
+
+    def __str__(self):
+        return '{} _in_ {}'.format(self.name, self.get_bag_name())
+
+
+class Kit(ContainerCommonInfo):
+    # Collection of items combined in a single case/box/carrier to tackle particular function
+    # For example "Glucometer Kit", "Airway Kit", "Suction Unit", "IV Kit", "AirTraq", etc.
+
+    bag_compartment = models.ForeignKey(BagCompartment,
+                                        blank=True,
+                                        null=True,
+                                        on_delete=models.CASCADE)
+    items = models.ManyToManyField('Item',
+                                   blank=True,
+                                   null=True)
+
+    def get_bag_compartment_name(self):
+        try:
+            bag_compartment_name = self.bag_compartment.name
+            return bag_compartment_name
+        except AttributeError:
+            return "Not Yet Assigned to Any Bag Compartments"
+
+    def get_bag_name(self):
+        try:
+            bag_compartment = self.bag_compartment
+            bag_name = bag_compartment.get_bag_name()
+            return bag_name
+        except AttributeError:
+            # Exception also being caught in BagCompartment.get_bag_name()
+            return "Not Yet Assigned To Any Bags"
+
+    def __str__(self):
+        return '{} _in_ {} >> {}'.format(self.name, self.get_bag_name(), self.get_bag_compartment_name())
+
+
+class KitCompartment(ContainerCommonInfo):
+    # Section of the kit that holds items.
+    # For example "Pocket Under Blades", "Pocket Under Syringes", etc.
+
+    kit = models.ForeignKey(Kit,
+                            blank=True,
+                            null=True,
+                            on_delete=models.CASCADE)
+    items = models.ManyToManyField('Item',
+                                   blank=True,
+                                   null=True)
+
+    def get_kit_name(self):
+        try:
+            return self.kit.name
+        except AttributeError:
+            return "Not Yet Assigned to Any Kits"
+
+
 class Item(ContainerCommonInfo):
     # Single resource
     # For example "Band Aid", "Syringe", etc.
@@ -46,27 +128,5 @@ class Item(ContainerCommonInfo):
 
     class Meta:
         ordering = ['name', 'size']
-
-
-class Compartment(ContainerCommonInfo):
-    # Section of the bag or kit that holds items and other kits.
-    # For example "Front Outside Pocket", "Pocket Under Blades", etc.
-
-    pass
-
-
-class Kit(ContainerCommonInfo):
-    # Collection of items combined in a single case/box/carrier to tackle particular function
-    # For example "Glucometer Kit", "Airway Kit", "Suction Unit", "IV Kit", "AirTraq", etc.
-
-    pass
-
-
-class Bag(ContainerCommonInfo):
-    # Collection of compartments/pockets/pouches, see class Compartments for content.
-    # May also hold loose items (optional) for single space bags (no compartmentalization).
-
-    def __str__(self):
-        return self.name
 
 # TODO add Device class for Monitor X Series

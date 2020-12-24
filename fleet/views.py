@@ -42,7 +42,7 @@ def vehicle(request, station_id, vehicle_path):
     vehicle_name = vehicle_name.capitalize()       # TODO Create vehicle_id field instead?
     vehicle = Vehicle.objects.filter(name=vehicle_name)[0]
 
-    bags = vehicle.vehiclebagassociation_set.all()
+    vehicle_bags = vehicle.vehiclebagassociation_set.all()
     new_column_cutoffs = ['ETT Side',
                           'Under Syringes',
                           'Left Outside Pocket',
@@ -50,7 +50,7 @@ def vehicle(request, station_id, vehicle_path):
                           'Top Outside Flap',
                           'Inside Bag Main']
     context = {
-        'vehicle_bags': bags,
+        'vehicle_bags': vehicle_bags,
         'station_name': station_name,
         'station_path': station_path,
         'station_id': station_id,
