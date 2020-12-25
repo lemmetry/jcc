@@ -1,7 +1,9 @@
 from django.db import models
 
 
-class ContainerCommonInfo(models.Model):
+class Bag(models.Model):
+    # Collection of compartments/pockets/pouches, see class Compartments for content.
+    # May also hold loose items (optional) for single space bags (no compartmentalization).
     name = models.CharField(max_length=40)
     brand = models.CharField(max_length=40,
                              blank=True,
@@ -9,23 +11,16 @@ class ContainerCommonInfo(models.Model):
     ordering = models.PositiveSmallIntegerField(blank=True,
                                                 null=True)
 
-    class Meta:
-        abstract = True
-        ordering = ['name']
-
-
-class Bag(ContainerCommonInfo):
-    # Collection of compartments/pockets/pouches, see class Compartments for content.
-    # May also hold loose items (optional) for single space bags (no compartmentalization).
-
     def __str__(self):
         return self.name
 
 
-class BagCompartment(ContainerCommonInfo):
+class BagCompartment(models.Model):
     # Section of the bag that holds items and other kits.
     # For example "Main Top Compartment", "Top Outside Pouch", etc.
-
+    name = models.CharField(max_length=40)
+    ordering = models.PositiveSmallIntegerField(blank=True,
+                                                null=True)
     bag = models.ForeignKey(Bag,
                             blank=True,
                             null=True,
@@ -45,10 +40,15 @@ class BagCompartment(ContainerCommonInfo):
         return '{} _in_ {}'.format(self.name, self.get_bag_name())
 
 
-class Kit(ContainerCommonInfo):
+class Kit(models.Model):
     # Collection of items combined in a single case/box/carrier to tackle particular function
     # For example "Glucometer Kit", "Airway Kit", "Suction Unit", "IV Kit", "AirTraq", etc.
-
+    name = models.CharField(max_length=40)
+    brand = models.CharField(max_length=40,
+                             blank=True,
+                             null=True)
+    ordering = models.PositiveSmallIntegerField(blank=True,
+                                                null=True)
     bag_compartment = models.ForeignKey(BagCompartment,
                                         blank=True,
                                         null=True,
@@ -77,10 +77,12 @@ class Kit(ContainerCommonInfo):
         return '{} _in_ {} >> {}'.format(self.name, self.get_bag_name(), self.get_bag_compartment_name())
 
 
-class KitCompartment(ContainerCommonInfo):
+class KitCompartment(models.Model):
     # Section of the kit that holds items.
     # For example "Pocket Under Blades", "Pocket Under Syringes", etc.
-
+    name = models.CharField(max_length=40)
+    ordering = models.PositiveSmallIntegerField(blank=True,
+                                                null=True)
     kit = models.ForeignKey(Kit,
                             blank=True,
                             null=True,
@@ -96,10 +98,15 @@ class KitCompartment(ContainerCommonInfo):
             return "Not Yet Assigned to Any Kits"
 
 
-class Item(ContainerCommonInfo):
+class Item(models.Model): #TODO does not need to be a Container
     # Single resource
     # For example "Band Aid", "Syringe", etc.
-
+    name = models.CharField(max_length=40)
+    brand = models.CharField(max_length=40,
+                             blank=True,
+                             null=True)
+    ordering = models.PositiveSmallIntegerField(blank=True,
+                                                null=True)
     size = models.CharField(max_length=40,
                             blank=True)
     notes = models.CharField(max_length=60,
