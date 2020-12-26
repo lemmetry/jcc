@@ -25,9 +25,6 @@ class BagCompartment(models.Model):
                             blank=True,
                             null=True,
                             on_delete=models.CASCADE)
-    items = models.ManyToManyField('Item',
-                                   blank=True,
-                                   null=True)
 
     def get_bag_name(self):
         try:
@@ -38,6 +35,34 @@ class BagCompartment(models.Model):
 
     def __str__(self):
         return '{} _in_ {}'.format(self.name, self.get_bag_name())
+
+
+class BagCompartmentToItemAssociation(models.Model):
+    # Defines quantity of the item in the bag compartment.
+    # Example: 'Bio-Hazard Bag, Large' x2 in 'Center Pocket'.
+    bag_compartment = models.ForeignKey(BagCompartment,
+                                        blank=True,
+                                        null=True,
+                                        on_delete=models.CASCADE)
+    item = models.ForeignKey('Item',
+                             blank=True,
+                             null=True,
+                             on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField()
+    ordering = models.PositiveSmallIntegerField(blank=True,
+                                                null=True)
+
+    def __str__(self):
+        item_details = self.item.name
+
+        if self.item.size:
+            item_details = '{}, {}'.format(item_details, self.item.size)
+        item_details = '{} (x{})' .format(item_details, self.quantity)
+
+        return '{} in {}'.format(item_details, self.bag_compartment.name)
+
+    class Meta:
+        verbose_name = "Bag Compartment to Item Association"
 
 
 class Kit(models.Model):
@@ -53,9 +78,6 @@ class Kit(models.Model):
                                         blank=True,
                                         null=True,
                                         on_delete=models.CASCADE)
-    items = models.ManyToManyField('Item',
-                                   blank=True,
-                                   null=True)
 
     def get_bag_compartment_name(self):
         try:
@@ -77,6 +99,34 @@ class Kit(models.Model):
         return '{} _in_ {} >> {}'.format(self.name, self.get_bag_name(), self.get_bag_compartment_name())
 
 
+class KitToItemAssociation(models.Model):
+    # Defines quantity of the item in the kit.
+    # Example: 'Protective Lancet' x10 in 'Glucometer Kit'.
+    kit = models.ForeignKey(Kit,
+                            blank=True,
+                            null=True,
+                            on_delete=models.CASCADE)
+    item = models.ForeignKey('Item',
+                             blank=True,
+                             null=True,
+                             on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField()
+    ordering = models.PositiveSmallIntegerField(blank=True,
+                                                null=True)
+
+    def __str__(self):
+        item_details = self.item.name
+
+        if self.item.size:
+            item_details = '{}, {}'.format(item_details, self.item.size)
+        item_details = '{} (x{})' .format(item_details, self.quantity)
+
+        return '{} in {}'.format(item_details, self.kit.name)
+
+    class Meta:
+        verbose_name = "Kit to Item Association"
+
+
 class KitCompartment(models.Model):
     # Section of the kit that holds items.
     # For example "Pocket Under Blades", "Pocket Under Syringes", etc.
@@ -87,9 +137,6 @@ class KitCompartment(models.Model):
                             blank=True,
                             null=True,
                             on_delete=models.CASCADE)
-    items = models.ManyToManyField('Item',
-                                   blank=True,
-                                   null=True)
 
     def get_kit_name(self):
         try:
@@ -97,18 +144,49 @@ class KitCompartment(models.Model):
         except AttributeError:
             return "Not Yet Assigned to Any Kits"
 
+    def __str__(self):
+        return '{} _in_ {}'.format(self.name, self.get_kit_name())
 
-class Item(models.Model): #TODO does not need to be a Container
+
+class KitCompartmentToItemAssociation(models.Model):
+    # Defines quantity of the item in the kit compartment.
+    # Example: 'Lubricant, Single Use' x4 in 'ETT Side'.
+    kit_compartment = models.ForeignKey(KitCompartment,
+                                        blank=True,
+                                        null=True,
+                                        on_delete=models.CASCADE)
+    item = models.ForeignKey('Item',
+                             blank=True,
+                             null=True,
+                             on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField()
+    ordering = models.PositiveSmallIntegerField(blank=True,
+                                                null=True)
+
+    def __str__(self):
+        item_details = self.item.name
+
+        if self.item.size:
+            item_details = '{}, {}'.format(item_details, self.item.size)
+        item_details = '{} (x{})' .format(item_details, self.quantity)
+
+        return '{} in {}'.format(item_details, self.kit_compartment.name)
+
+    class Meta:
+        verbose_name = "Kit Compartment to Item Association"
+
+
+class Item(models.Model):
     # Single resource
     # For example "Band Aid", "Syringe", etc.
     name = models.CharField(max_length=40)
+    size = models.CharField(max_length=40,
+                            blank=True)
     brand = models.CharField(max_length=40,
                              blank=True,
                              null=True)
     ordering = models.PositiveSmallIntegerField(blank=True,
                                                 null=True)
-    size = models.CharField(max_length=40,
-                            blank=True)
     notes = models.CharField(max_length=60,
                              blank=True)
     HOSPITAL = 'HOSPITAL'
