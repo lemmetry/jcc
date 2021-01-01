@@ -3,6 +3,9 @@ from django.http import HttpResponseRedirect
 
 from .forms import OrderForm
 from inventory.models import Bag
+from inventory.models import BagCompartmentToItemAssociation
+from inventory.models import KitToItemAssociation
+from inventory.models import KitCompartmentToItemAssociation
 
 
 def order_form(request):
@@ -25,8 +28,22 @@ def order_form(request):
                     association_object_pk = key.split('_')[1]
                     # ^^^ association_class_name and association_pk will provide enough information about the ordered
                     # item, including it's location.
-                    print('association_class_name: %s, '
-                          'association_object_pk: %s' % (association_class_name, association_object_pk))
+
+                    if association_class_name == 'bagcompartmenttoitemassociation':
+                        bag_compartment_to_item_association = BagCompartmentToItemAssociation.objects.get(pk=association_object_pk)
+                        item = bag_compartment_to_item_association.item
+                        print('%s in %s' % (item.name, bag_compartment_to_item_association.bag_compartment.name))
+                    elif association_class_name == 'kittoitemassociation':
+                        kit_to_item_association = KitToItemAssociation.objects.get(pk=association_object_pk)
+                        item = kit_to_item_association.item
+                        print('%s in %s' % (item.name, kit_to_item_association.kit.name))
+                    elif association_class_name == 'kitcompartmenttoitemassociation':
+                        kit_compartment_to_item_association = KitCompartmentToItemAssociation.objects.get(pk=association_object_pk)
+                        item = kit_compartment_to_item_association.item
+                        print('%s in %s' % (item.name, kit_compartment_to_item_association.kit_compartment.name))
+                    else:
+                        print('How did you get here?')
+
             except ValueError:
                 pass
 
