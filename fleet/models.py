@@ -40,7 +40,7 @@ class Vehicle(models.Model):
                                 null=True,
                                 on_delete=models.CASCADE)
     bags = models.ManyToManyField(Bag,
-                                  through='VehicleBagAssociation')
+                                  through='VehicleToBagAssociation')
 
     def get_station_assigned(self):
         return self.station
@@ -52,7 +52,7 @@ class Vehicle(models.Model):
         return self.call_sign
 
 
-class VehicleBagAssociation(models.Model):
+class VehicleToBagAssociation(models.Model):
     vehicle = models.ForeignKey(Vehicle,
                                 on_delete=models.CASCADE)
     bag = models.ForeignKey(Bag,
@@ -63,5 +63,4 @@ class VehicleBagAssociation(models.Model):
         return '{}: {}'.format(self.vehicle.name, self.bag.name)
 
     class Meta:
-        verbose_name = "Vehicle-Bag Association"
-        verbose_name_plural = "Vehicle-Bag Association"
+        verbose_name = "Vehicle to Bag Association"
