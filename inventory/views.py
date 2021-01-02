@@ -1,14 +1,15 @@
 from django.shortcuts import render
 
-from inventory.models import Bag
+from fleet.models import Vehicle
 from inventory.models import BagCompartmentToItemAssociation
 from inventory.models import KitToItemAssociation
 from inventory.models import KitCompartmentToItemAssociation
 
 
 def order_form(request):
-    red_bag = Bag.objects.get(name='Red Bag "Stat Pack"')
-    vehicle_bags = [red_bag]
+    vehicle = Vehicle.objects.get(call_sign='M11')
+    vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
+    vehicle_bags = [vehicle_to_bag_association.bag for vehicle_to_bag_association in vehicle_to_bag_associations]
 
     r = request.GET
     for key, value in r.items():
