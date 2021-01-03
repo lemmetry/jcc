@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 
 from fleet.models import Vehicle
 from inventory.models import BagCompartmentToItemAssociation
@@ -51,7 +51,7 @@ def order_form(request, vehicle_call_sign):
             except ValueError:
                 pass
 
-        return HttpResponseRedirect('order-form')
+        return redirect('order-form', vehicle_call_sign=vehicle_call_sign)
     else:
         template = 'order-form.html'
         new_column_cutoffs = ['ETT Side',
