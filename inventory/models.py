@@ -214,4 +214,30 @@ class Item(models.Model):
     class Meta:
         ordering = ['name', 'size']
 
+
+class BagOrder(models.Model):
+    bag = models.ForeignKey(Bag,
+                            blank=True,
+                            null=True,
+                            on_delete=models.CASCADE)
+    vehicle = models.ForeignKey('fleet.Vehicle',
+                                blank=True,
+                                null=True,
+                                on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class ItemToBagOrderAssociation(models.Model):
+    # Defines quantity of the item in the bag order.
+    item = models.ForeignKey(Item,
+                             on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField()
+    bag_order = models.ForeignKey(BagOrder,
+                                  blank=True,
+                                  null=True,
+                                  on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Item to Bag Order Association"
+
 # TODO add Device class for Monitor X Series

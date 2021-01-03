@@ -7,6 +7,8 @@ from .models import KitToItemAssociation
 from .models import KitCompartment
 from .models import KitCompartmentToItemAssociation
 from .models import Item
+from .models import BagOrder
+from .models import ItemToBagOrderAssociation
 
 
 class BagCompartmentAdmin(admin.ModelAdmin):
@@ -44,3 +46,5 @@ admin.site.register(KitToItemAssociation, KitToItemAssociationAdmin)
 admin.site.register(KitCompartment, KitCompartmentAdmin)
 admin.site.register(KitCompartmentToItemAssociation)
 admin.site.register(Item)
+admin.site.register(BagOrder)
+admin.site.register(ItemToBagOrderAssociation)
