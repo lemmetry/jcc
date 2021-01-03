@@ -216,15 +216,14 @@ class Item(models.Model):
 
 
 class VehicleOrder(models.Model):
-    bag = models.ForeignKey(Bag,
-                            blank=True,
-                            null=True,
-                            on_delete=models.CASCADE)
     vehicle = models.ForeignKey('fleet.Vehicle',
                                 blank=True,
                                 null=True,
                                 on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return ('%s: %s' % (self.vehicle.name, self.timestamp.strftime("%d %B, %Y at %H:%M:%S")))
 
 
 class VehicleOrderToItemAssociation(models.Model):
@@ -233,6 +232,10 @@ class VehicleOrderToItemAssociation(models.Model):
                                       blank=True,
                                       null=True,
                                       on_delete=models.CASCADE)
+    bag = models.ForeignKey(Bag,
+                            blank=True,
+                            null=True,
+                            on_delete=models.CASCADE)
     item = models.ForeignKey(Item,
                              on_delete=models.CASCADE)
     quantity = models.SmallIntegerField()
