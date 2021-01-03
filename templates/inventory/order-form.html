@@ -21,7 +21,7 @@
 {#  </ol>#}
 {#</nav>#}
 
-<form>
+<form method="post">{% csrf_token %}
   <div class="accordion" id="bags_accordion">
 
     {% for vehicle_bag in vehicle_bags %}
@@ -144,18 +144,18 @@
                         </div>
                       {% endfor %}
 
-{#                      {% if kit_compartment.name in new_column_cutoffs %}#}
-{#                        </div>#}
-{#                        <div class="col-md-3 col-sm-6">#}
-{#                      {% endif %}#}
+                      {% if kit_compartment.name in new_column_cutoffs %}
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                      {% endif %}
 
                     {% endfor %}  <!-- /kit>kit_compartment -->
                   {% endfor %}  <!-- /kit -->
 
-{#                {% if bag_compartment.name in new_column_cutoffs %}#}
-{#                  </div>#}
-{#                  <div class="col-md-3 col-sm-6">#}
-{#                {% endif %}#}
+                {% if bag_compartment.name in new_column_cutoffs %}
+                  </div>
+                  <div class="col-md-3 col-sm-6">
+                {% endif %}
 
                 {% endfor %} <!-- /bag_compartment -->
                 </div>  {# /col #}
