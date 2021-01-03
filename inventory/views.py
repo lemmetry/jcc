@@ -5,7 +5,7 @@ from fleet.models import Vehicle
 from inventory.models import BagCompartmentToItemAssociation
 from inventory.models import KitToItemAssociation
 from inventory.models import KitCompartmentToItemAssociation
-from inventory.models import BagOrderToItemAssociation
+from inventory.models import VehicleOrderToItemAssociation
 
 
 def order_form(request, vehicle_call_sign):
@@ -46,25 +46,23 @@ def order_form(request, vehicle_call_sign):
                     #                                 item_location_association_object_pk,
                     #                                 item,
                     #                                 item_quantity))
-                    bag_order_to_item_association = BagOrderToItemAssociation(item=item, quantity=item_quantity)
-                    bag_order_to_item_association.save()
+                    vehicle_order_to_item_association = VehicleOrderToItemAssociation(item=item, quantity=item_quantity)
+                    vehicle_order_to_item_association.save()
             except ValueError:
                 pass
 
         return HttpResponseRedirect('order-form')
     else:
-        pass
+        template = 'order-form.html'
+        new_column_cutoffs = ['ETT Side',
+                              'Under Syringes',
+                              'Left Outside Pocket',
+                              'Top Outside Pouches',
+                              'Top Outside Flap',
+                              'Inside Bag Main']
+        context = {
+            'vehicle_bags': vehicle_bags,
+            'new_column_cutoffs': new_column_cutoffs
+        }
 
-    template = 'order-form.html'
-    new_column_cutoffs = ['ETT Side',
-                          'Under Syringes',
-                          'Left Outside Pocket',
-                          'Top Outside Pouches',
-                          'Top Outside Flap',
-                          'Inside Bag Main']
-    context = {
-        'vehicle_bags': vehicle_bags,
-        'new_column_cutoffs': new_column_cutoffs
-    }
     return render(request, template, context)
-
