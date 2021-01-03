@@ -8,7 +8,7 @@ from .models import KitCompartment
 from .models import KitCompartmentToItemAssociation
 from .models import Item
 from .models import BagOrder
-from .models import ItemToBagOrderAssociation
+from .models import BagOrderToItemAssociation
 
 
 class BagCompartmentAdmin(admin.ModelAdmin):
@@ -38,6 +38,10 @@ class KitCompartmentAdmin(admin.ModelAdmin):
     get_items.short_description = 'Items'
 
 
+class BagOrderToItemAssociationAdmin(admin.ModelAdmin):
+    list_display = ('item', 'quantity')
+
+
 admin.site.register(Bag)
 admin.site.register(BagCompartment, BagCompartmentAdmin)
 admin.site.register(BagCompartmentToItemAssociation, BagCompartmentToItemAssociationAdmin)
@@ -47,4 +51,4 @@ admin.site.register(KitCompartment, KitCompartmentAdmin)
 admin.site.register(KitCompartmentToItemAssociation)
 admin.site.register(Item)
 admin.site.register(BagOrder)
-admin.site.register(ItemToBagOrderAssociation)
+admin.site.register(BagOrderToItemAssociation, BagOrderToItemAssociationAdmin)
