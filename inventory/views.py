@@ -8,8 +8,8 @@ from inventory.models import KitCompartmentToItemAssociation
 from inventory.models import BagOrderToItemAssociation
 
 
-def order_form(request):
-    vehicle = Vehicle.objects.get(call_sign='M11')
+def order_form(request, vehicle_call_sign):
+    vehicle = Vehicle.objects.get(call_sign=vehicle_call_sign)
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
     vehicle_bags = [vehicle_to_bag_association.bag for vehicle_to_bag_association in vehicle_to_bag_associations]
 
