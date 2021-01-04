@@ -57,9 +57,9 @@ def order_form(request, vehicle_call_sign):
             except ValueError:
                 pass
 
-        return redirect('order-form', vehicle_call_sign=vehicle_call_sign)
+        return redirect('review_order', vehicle_order.pk)
     else:
-        template = 'order-form.html'
+        template = 'order_form.html'
         new_column_cutoffs = ['ETT Side',
                               'Under Syringes',
                               'Left Outside Pocket',
@@ -71,4 +71,18 @@ def order_form(request, vehicle_call_sign):
             'new_column_cutoffs': new_column_cutoffs
         }
 
+    return render(request, template, context)
+
+
+def review_order(request, vehicle_order_pk):
+    vehicle_order = VehicleOrder.objects.get(pk=vehicle_order_pk)
+    vehicle_name = vehicle_order.vehicle.name
+    vehicle_order_to_item_associations = vehicle_order.vehicleordertoitemassociation_set.all()
+
+    template = 'review_order.html'
+    context = {
+        'vehicle_order': vehicle_order,
+        'vehicle_name': vehicle_name,
+        'vehicle_order_to_item_associations': vehicle_order_to_item_associations
+    }
     return render(request, template, context)
