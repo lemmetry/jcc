@@ -1,12 +1,26 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 
+from fleet.models import Station
 from fleet.models import Vehicle
 from inventory.models import BagCompartmentToItemAssociation
 from inventory.models import KitToItemAssociation
 from inventory.models import KitCompartmentToItemAssociation
 from inventory.models import VehicleOrder
 from inventory.models import VehicleOrderToItemAssociation
+
+
+def recent_orders(request, station_id):
+    station = Station.objects.get(station_id=station_id)
+    # TODO Last x orders for now, later add filter by station_id
+    last_five_orders = VehicleOrder.objects.order_by('-pk')[:5]
+
+    template = 'recent_orders.html'
+    context = {
+        'station': station,
+        'last_five_orders': last_five_orders
+    }
+    return render(request, template, context)
 
 
 def order_form(request, vehicle_call_sign):
