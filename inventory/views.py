@@ -5,6 +5,7 @@ from fleet.models import Vehicle
 from inventory.models import BagCompartmentToItemAssociation
 from inventory.models import KitToItemAssociation
 from inventory.models import KitCompartmentToItemAssociation
+from inventory.models import VehicleOrder
 from inventory.models import VehicleOrderToItemAssociation
 
 
@@ -15,6 +16,8 @@ def order_form(request, vehicle_call_sign):
 
     if request.method == 'POST':
         r = request.POST
+        vehicle_order = VehicleOrder.objects.create(vehicle=vehicle)
+
         for key, value in r.items():
             try:
                 value = int(value)
@@ -26,27 +29,30 @@ def order_form(request, vehicle_call_sign):
                         bag_compartment_to_item_association = \
                             BagCompartmentToItemAssociation.objects.get(pk=item_location_association_object_pk)
                         item = bag_compartment_to_item_association.item
-                        # print('%s in %s' % (item.name, bag_compartment_to_item_association.bag_compartment.name))
+                        bag = bag_compartment_to_item_association.bag_compartment.bag
+
                     elif item_location_association_class_name == 'kittoitemassociation':
                         kit_to_item_association = \
                             KitToItemAssociation.objects.get(pk=item_location_association_object_pk)
                         item = kit_to_item_association.item
-                        # print('%s in %s' % (item.name, kit_to_item_association.kit.name))
+                        bag = kit_to_item_association.kit.bag_compartment.bag
+
                     elif item_location_association_class_name == 'kitcompartmenttoitemassociation':
                         kit_compartment_to_item_association = \
                             KitCompartmentToItemAssociation.objects.get(pk=item_location_association_object_pk)
                         item = kit_compartment_to_item_association.item
-                        # print('%s in %s' % (item.name, kit_compartment_to_item_association.kit_compartment.name))
+                        bag = kit_compartment_to_item_association.kit_compartment.kit.bag_compartment.bag
+
                     else:
+                        bag = None
                         item = None
                         print('How did you get here?')
 
                     item_quantity = value
-                    # print('%s - pk: %s;  %s x%s' % (item_location_association_class_name,
-                    #                                 item_location_association_object_pk,
-                    #                                 item,
-                    #                                 item_quantity))
-                    vehicle_order_to_item_association = VehicleOrderToItemAssociation(item=item, quantity=item_quantity)
+                    vehicle_order_to_item_association = VehicleOrderToItemAssociation(vehicle_order=vehicle_order,
+                                                                                      bag=bag,
+                                                                                      item=item,
+                                                                                      quantity=item_quantity)
                     vehicle_order_to_item_association.save()
             except ValueError:
                 pass

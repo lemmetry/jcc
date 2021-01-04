@@ -39,7 +39,14 @@ class KitCompartmentAdmin(admin.ModelAdmin):
 
 
 class VehicleOrderToItemAssociationAdmin(admin.ModelAdmin):
-    list_display = ('item', 'quantity')
+    list_display = ('item', 'quantity', 'bag', 'get_vehicle')
+
+    def get_vehicle(self, obj):
+        try:
+            return obj.vehicle_order.vehicle
+        except AttributeError:
+            return 'Does Not Belong To Any Vehicle Orders'
+    get_vehicle.short_description = 'Vehicle'
 
 
 admin.site.register(Bag)
