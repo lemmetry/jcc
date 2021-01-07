@@ -47,7 +47,11 @@
 
     <div class="row">
       <div class="col-md-6" style="float:none; margin:auto; text-align: center">
-        <a href="#" class="btn btn-light active" role="button" aria-pressed="true">Submit Order</a>
+        <a href="{% url 'order confirmation' station_id 1 %}"
+           class="btn btn-light active"
+           role="button"
+           aria-pressed="true">Submit Order
+        </a>
       </div>
     </div> {# /row #}
 

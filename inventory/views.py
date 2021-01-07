@@ -106,3 +106,14 @@ def review_order(request, vehicle_order_pk):
         'vehicle_order_to_item_associations': vehicle_order_to_item_associations
     }
     return render(request, template, context)
+
+
+def order_confirmation(request, station_id, order_pk):
+    vehicle_order = VehicleOrder.objects.get(pk=order_pk)
+    orders = vehicle_order.vehicleordertoitemassociation_set.all()
+
+    template = 'order_confirmation.html'
+    context = {
+        'orders': orders
+    }
+    return render(request, template, context)
