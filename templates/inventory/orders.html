@@ -7,9 +7,11 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
 
 </head>
+
 <body style="overflow-y:scroll;">
 
   <div class="row">
@@ -20,7 +22,11 @@
 
   <div class="row">
     <div class="col-md-6" style="float:none; margin:auto; text-align: center">
-      <a href="#" class="btn btn-light active" role="button" aria-pressed="true">Create Order</a>
+      <a href="{% url 'station fleet' station_id=station.station_id %}"
+         class="btn btn-light active"
+         role="button"
+         aria-pressed="true">Create Order
+      </a>
     </div>
   </div>
 

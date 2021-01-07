@@ -15,7 +15,7 @@ def home(request):
     return render(request, template, context)
 
 
-def station(request, station_id):
+def station_fleet(request, station_id):
     station = Station.objects.all().filter(station_id=station_id)[0]
     station_name = station.get_name()
     station_fleet = Vehicle.objects.filter(station=station_id)
