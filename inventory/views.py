@@ -10,15 +10,12 @@ from inventory.models import VehicleOrder
 from inventory.models import VehicleOrderToItemAssociation
 
 
-def recent_orders(request, station_id):
+def orders(request, station_id):
     station = Station.objects.get(station_id=station_id)
-    # TODO Last x orders for now, later add filter by station_id
-    last_five_orders = VehicleOrder.objects.order_by('-pk')[:5]
 
-    template = 'recent_orders.html'
+    template = 'orders.html'
     context = {
         'station': station,
-        'last_five_orders': last_five_orders
     }
     return render(request, template, context)
 

@@ -24,10 +24,10 @@
         {% for station in stations %}
 
           <div class="col-md-4 col-sm-6">
-            <a href="{{ station.get_path }}">
+            <a href="{% url 'orders' station_id=station.id %}">
               <div class="card mb-4">
 
-{#TODO make image(or path to it) Station instance field#}
+                {#TODO make image(or path to it) Station instance field#}
                 {% if station.get_name == 'Station 1' %}
                   <img src="{% static "fleet/logo_station_1.jpg" %}" class="img-responsive mx-auto mt-4" alt="..." height="200">
                 {% elif station.get_name == 'Station 3' %}
@@ -40,11 +40,6 @@
                   <h5 class="card-title text-center">
                     {{ station.get_name }}
                   </h5>
-
-{#                  <p class="card-text text-muted small">{{ station_description }}</p>#}
-{#                  {% if station.format_phone_number %}#}
-{#                    <p class="card-text text-muted text-right small">{{ station.format_phone_number }}</p>#}
-{#                  {% endif %}#}
                 </div>
 
               </div>
