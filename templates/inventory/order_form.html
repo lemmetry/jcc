@@ -7,19 +7,21 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
 
   <title>{{ vehicle_name }}</title>
 </head>
+
 <body style="overflow-y:scroll;">
 
-{#<nav aria-label="breadcrumb">#}
-{#  <ol class="breadcrumb">#}
-{#    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>#}
-{#    <li class="breadcrumb-item"><a href="{% url 'station #' station_id %}">{{ station_name }}</a></li>#}
-{#    <li class="breadcrumb-item active" aria-current="page">{{ vehicle_name }}</li>#}
-{#  </ol>#}
-{#</nav>#}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'station fleet' station_id %}">{{ station_name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ vehicle_name }}</li>
+  </ol>
+</nav>
 
 <form method="post">{% csrf_token %}
   <div class="accordion" id="bags_accordion">

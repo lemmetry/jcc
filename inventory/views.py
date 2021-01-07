@@ -20,8 +20,14 @@ def orders(request, station_id):
     return render(request, template, context)
 
 
-def order_form(request, vehicle_call_sign):
-    vehicle = Vehicle.objects.get(call_sign=vehicle_call_sign)
+def order_form(request, station_id, vehicle_path):
+    station = Station.objects.get(station_id=station_id)
+    station_name = station.get_name()
+
+    vehicle_name = vehicle_path.replace('_', ' ')  # TODO I don't like this part.
+    vehicle_name = vehicle_name.capitalize()       # TODO Create vehicle_id field instead?
+    vehicle = Vehicle.objects.get(name=vehicle_name)
+
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
     vehicle_bags = [vehicle_to_bag_association.bag for vehicle_to_bag_association in vehicle_to_bag_associations]
 
@@ -68,7 +74,7 @@ def order_form(request, vehicle_call_sign):
             except ValueError:
                 pass
 
-        return redirect('review_order', vehicle_order.pk)
+        return redirect('station fleet', station_id)
     else:
         template = 'order_form.html'
         new_column_cutoffs = ['ETT Side',
@@ -78,6 +84,9 @@ def order_form(request, vehicle_call_sign):
                               'Top Outside Flap',
                               'Inside Bag Main']
         context = {
+            'station_id': station_id,
+            'station_name': station_name,
+            'vehicle_name': vehicle_name,
             'vehicle_bags': vehicle_bags,
             'new_column_cutoffs': new_column_cutoffs
         }
