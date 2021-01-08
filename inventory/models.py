@@ -1,4 +1,5 @@
 from django.db import models
+from django.apps import apps
 
 
 class Bag(models.Model):
@@ -221,9 +222,13 @@ class VehicleOrder(models.Model):
                                 null=True,
                                 on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+    station_order = models.ForeignKey('StationOrder',
+                                      blank=True,
+                                      null=True,
+                                      on_delete=models.CASCADE)
 
     def __str__(self):
-        return ('%s: %s' % (self.vehicle.name, self.timestamp.strftime("%d %B, %Y at %H:%M:%S")))
+        return '%s: %s' % (self.vehicle.name, self.timestamp.strftime("%d %B, %Y at %H:%M:%S"))
 
 
 class VehicleOrderToItemAssociation(models.Model):
@@ -245,5 +250,22 @@ class VehicleOrderToItemAssociation(models.Model):
 
     class Meta:
         verbose_name = "Vehicle Order To Item Association"
+
+
+class StationOrder(models.Model):
+    station_id = models.SmallIntegerField()
+    is_submitted = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def get_station_name(self):
+        Station = apps.get_model('fleet', 'Station')
+        station = Station.objects.get(station_id=self.station_id)
+        station_name = station.get_name()
+        return station_name
+
+    def __str__(self):
+        return '%s %s %s' % (self.get_station_name(),
+                             self.timestamp.strftime("%d %B, %Y at %H:%M:%S"),
+                             self.is_submitted)
 
 # TODO add Device class for Monitor X Series

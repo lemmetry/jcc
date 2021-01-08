@@ -9,6 +9,7 @@ from .models import KitCompartmentToItemAssociation
 from .models import Item
 from .models import VehicleOrder
 from .models import VehicleOrderToItemAssociation
+from .models import StationOrder
 
 
 class BagCompartmentAdmin(admin.ModelAdmin):
@@ -49,6 +50,10 @@ class VehicleOrderToItemAssociationAdmin(admin.ModelAdmin):
     get_vehicle.short_description = 'Vehicle'
 
 
+class StationOrderAdmin(admin.ModelAdmin):
+    list_display = ('get_station_name', 'timestamp', 'is_submitted')
+
+
 admin.site.register(Bag)
 admin.site.register(BagCompartment, BagCompartmentAdmin)
 admin.site.register(BagCompartmentToItemAssociation, BagCompartmentToItemAssociationAdmin)
@@ -59,3 +64,4 @@ admin.site.register(KitCompartmentToItemAssociation)
 admin.site.register(Item)
 admin.site.register(VehicleOrder)
 admin.site.register(VehicleOrderToItemAssociation, VehicleOrderToItemAssociationAdmin)
+admin.site.register(StationOrder, StationOrderAdmin)
