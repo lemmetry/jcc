@@ -12,6 +12,9 @@ urlpatterns = [
     path('stations/<str:station_id>/fleet/<str:vehicle_path>', inventory_views.order_form,
          name='order form'),
 
+    path('stations/<str:station_id>/orders/<str:order_pk>', inventory_views.order_details,
+         name='order details'),
+
     path('stations/<str:station_id>/orders/<str:order_pk>/confirmation', inventory_views.order_confirmation,
          name='order confirmation'),
 ]

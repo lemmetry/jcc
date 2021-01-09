@@ -8,6 +8,7 @@ from inventory.models import KitToItemAssociation
 from inventory.models import KitCompartmentToItemAssociation
 from inventory.models import VehicleOrder
 from inventory.models import VehicleOrderToItemAssociation
+from inventory.models import StationOrder
 
 
 def orders(request, station_id):
@@ -114,6 +115,19 @@ def review_order(request, vehicle_order_pk):
         'vehicle_order': vehicle_order,
         'vehicle_name': vehicle_name,
         'vehicle_order_to_item_associations': vehicle_order_to_item_associations
+    }
+    return render(request, template, context)
+
+
+def order_details(request, station_id, order_pk):
+    station_order = StationOrder.objects.get(pk=order_pk)
+    vehicle_orders = station_order.vehicleorder_set.all()
+
+    template = 'order_details.html'
+    context = {
+        'station_id': station_id,
+        'order_pk': order_pk,
+        'vehicle_orders': vehicle_orders
     }
     return render(request, template, context)
 

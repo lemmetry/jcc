@@ -46,7 +46,9 @@
             {% for station_order in last_five_station_orders %}
               <tr>
                 <td>
-                  <a href="#">{{ station_order.timestamp }}</a>
+                  <a href="{% url 'order details' station_id=station_id order_pk=station_order.pk %}">
+                    {{ station_order.timestamp }}
+                  </a>
                 </td>
               </tr>
             {% endfor %}
