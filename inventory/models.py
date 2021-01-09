@@ -253,18 +253,16 @@ class VehicleOrderToItemAssociation(models.Model):
 
 
 class StationOrder(models.Model):
-    station_id = models.SmallIntegerField()
+    # Summarizes the order for the station on inventory day.
+    station = models.ForeignKey('fleet.Station',
+                                blank=True,
+                                null=True,
+                                on_delete=models.CASCADE)
     is_submitted = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def get_station_name(self):
-        Station = apps.get_model('fleet', 'Station')
-        station = Station.objects.get(station_id=self.station_id)
-        station_name = station.get_name()
-        return station_name
-
     def __str__(self):
-        return '%s %s %s' % (self.get_station_name(),
+        return '%s %s %s' % (self.station.get_name(),
                              self.timestamp.strftime("%d %B, %Y at %H:%M:%S"),
                              self.is_submitted)
 

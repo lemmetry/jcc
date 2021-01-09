@@ -51,7 +51,7 @@ class VehicleOrderToItemAssociationAdmin(admin.ModelAdmin):
 
 
 class StationOrderAdmin(admin.ModelAdmin):
-    list_display = ('get_station_name', 'timestamp', 'is_submitted')
+    list_display = ('station', 'timestamp', 'is_submitted')
 
 
 admin.site.register(Bag)
