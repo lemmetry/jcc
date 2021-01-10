@@ -16,6 +16,9 @@ def orders(request, station_id):
 
     if request.method == 'POST':
         new_station_order = StationOrder.objects.create(station=station)
+        station_order_pk = new_station_order.pk
+        request.session['station_order_pk'] = station_order_pk
+
         return redirect('station fleet', station_id)
 
     else:
@@ -47,6 +50,8 @@ def order_form(request, station_id, vehicle_path):
 
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
     vehicle_bags = [vehicle_to_bag_association.bag for vehicle_to_bag_association in vehicle_to_bag_associations]
+
+    station_order_pk = request.session['station_order_pk']
 
     if request.method == 'POST':
         r = request.POST

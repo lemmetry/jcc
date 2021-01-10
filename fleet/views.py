@@ -20,6 +20,8 @@ def station_fleet(request, station_id):
     station_name = station.get_name()
     station_fleet = Vehicle.objects.filter(station=station_id)
 
+    station_order_pk = request.session['station_order_pk']
+
     template = 'station_fleet.html'
     context = {
         'station_name': station_name,
