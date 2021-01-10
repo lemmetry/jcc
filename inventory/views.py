@@ -13,13 +13,19 @@ from inventory.models import StationOrder
 
 def orders(request, station_id):
     station = Station.objects.get(station_id=station_id)
-    station_name = station.get_name()
-    last_five_station_orders = station.stationorder_set.all()[:5]
-    if last_five_station_orders:
-        last_five_station_orders = reversed(last_five_station_orders)
-        no_records_exist_message = None
+
+    if request.method == 'POST':
+        new_station_order = StationOrder.objects.create(station=station)
+        return redirect('station fleet', station_id)
+
     else:
-        no_records_exist_message = "No Orders Found."
+        station_name = station.get_name()
+        last_five_station_orders = station.stationorder_set.all()[:5]
+        if last_five_station_orders:
+            last_five_station_orders = reversed(last_five_station_orders)
+            no_records_exist_message = None
+        else:
+            no_records_exist_message = "No Orders Found."
 
     template = 'orders.html'
     context = {

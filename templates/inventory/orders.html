@@ -30,11 +30,10 @@
           <tr>
             <th class="col-md-8" style="text-align: center">Recent Orders</th>
             <td class="col-md-4 bg-transparent" rowspan="0" style="text-align: center; vertical-align: middle">
-              <a href="{% url 'station fleet' station_id=station_id %}"
-                 class="btn btn-light active"
-                 role="button"
-                 aria-pressed="true">Create Order
-              </a>
+              <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-dark">Create Order</button>
+              </form>
             </td>
           </tr>
 
@@ -53,6 +52,9 @@
               </tr>
             {% endfor %}
           {% endif %}
+
+
+
 
         </table>
       </div>
