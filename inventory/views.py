@@ -11,23 +11,24 @@ from inventory.models import VehicleOrderToItemAssociation
 from inventory.models import StationOrder
 
 
-def orders(request, station_id):
+def station_orders_dashboard(request, station_id):
     station = Station.objects.get(station_id=station_id)
 
     if request.method == 'POST':
         new_station_order = StationOrder.objects.create(station=station)
-        return redirect('station fleet', station_id)
+        order_pk = new_station_order.pk
+        return redirect('make station order', station_id, order_pk)
 
     else:
         station_name = station.get_name()
-        last_five_station_orders = station.stationorder_set.all()[:5]
+        last_five_station_orders = station.stationorder_set.all().order_by('-pk')[:5][::-1]
         if last_five_station_orders:
             last_five_station_orders = reversed(last_five_station_orders)
             no_records_exist_message = None
         else:
             no_records_exist_message = "No Orders Found."
 
-    template = 'orders.html'
+    template = 'station_orders_dashboard.html'
     context = {
         'station_id': station_id,
         'station_name': station_name,
@@ -37,7 +38,29 @@ def orders(request, station_id):
     return render(request, template, context)
 
 
-def order_form(request, station_id, vehicle_path):
+def make_station_order(request, station_id, order_pk):
+    station = Station.objects.all().filter(station_id=station_id)[0]
+    station_name = station.get_name()
+    station_fleet = Vehicle.objects.filter(station=station_id)
+    station_order = StationOrder.objects.get(pk=order_pk)
+
+    if request.method == 'POST':
+        return redirect('station order confirmation', station_id, order_pk)
+
+    template = 'make_station_order.html'
+    context = {
+        'station_id': station_id,
+        'order_pk': order_pk,
+        'station_name': station_name,
+        'station_fleet': station_fleet,
+        'station_order': station_order,
+        'img_src': 'https://via.placeholder.com/150x100.png',
+        'vehicle_description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    }
+    return render(request, template, context)
+
+
+def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     station = Station.objects.get(station_id=station_id)
     station_name = station.get_name()
 
@@ -91,9 +114,9 @@ def order_form(request, station_id, vehicle_path):
             except ValueError:
                 pass
 
-        return redirect('station fleet', station_id)
+        return redirect('make station order', station_id, order_pk)
     else:
-        template = 'order_form.html'
+        template = 'make_vehicle_order.html'
         new_column_cutoffs = ['ETT Side',
                               'Under Syringes',
                               'Left Outside Pocket',
@@ -102,6 +125,7 @@ def order_form(request, station_id, vehicle_path):
                               'Inside Bag Main']
         context = {
             'station_id': station_id,
+            'order_pk': order_pk,
             'station_name': station_name,
             'vehicle_name': vehicle_name,
             'vehicle_bags': vehicle_bags,
@@ -111,39 +135,12 @@ def order_form(request, station_id, vehicle_path):
     return render(request, template, context)
 
 
-def review_order(request, vehicle_order_pk):
-    vehicle_order = VehicleOrder.objects.get(pk=vehicle_order_pk)
-    vehicle_name = vehicle_order.vehicle.name
-    vehicle_order_to_item_associations = vehicle_order.vehicleordertoitemassociation_set.all()
-
-    template = 'review_order.html'
-    context = {
-        'vehicle_order': vehicle_order,
-        'vehicle_name': vehicle_name,
-        'vehicle_order_to_item_associations': vehicle_order_to_item_associations
-    }
-    return render(request, template, context)
-
-
-def order_details(request, station_id, order_pk):
+def station_order_confirmation(request, station_id, order_pk):
     station_order = StationOrder.objects.get(pk=order_pk)
     vehicle_orders = station_order.vehicleorder_set.all()
 
-    template = 'order_details.html'
-    context = {
-        'station_id': station_id,
-        'order_pk': order_pk,
-        'vehicle_orders': vehicle_orders
-    }
-    return render(request, template, context)
-
-
-def station_order_confirmation(request, station_id, order_pk):
-    vehicle_order = VehicleOrder.objects.get(pk=order_pk)
-    orders = vehicle_order.vehicleordertoitemassociation_set.all()
-
     template = 'station_order_confirmation.html'
     context = {
-        'orders': orders
+        'vehicle_orders': vehicle_orders
     }
     return render(request, template, context)

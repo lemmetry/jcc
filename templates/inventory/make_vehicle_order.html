@@ -17,8 +17,12 @@
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'station fleet' station_id %}">{{ station_name }}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'make station order' station_id=station_id order_pk=order_pk %}">{{ station_name }}</a>
+    </li>
     <li class="breadcrumb-item active" aria-current="page">{{ vehicle_name }}</li>
   </ol>
 </nav>
