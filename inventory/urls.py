@@ -15,6 +15,6 @@ urlpatterns = [
     path('stations/<str:station_id>/orders/<str:order_pk>', inventory_views.order_details,
          name='order details'),
 
-    path('stations/<str:station_id>/orders/<str:order_pk>/confirmation', inventory_views.order_confirmation,
-         name='order confirmation'),
+    path('stations/<str:station_id>/orders/<str:order_pk>/confirmation', inventory_views.station_order_confirmation,
+         name='station order confirmation'),
 ]
