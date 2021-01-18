@@ -22,38 +22,65 @@
   </ol>
 </nav>
 
-<p>station order: {{ station_order }}</p>
-<p>station order pk: {{ station_order.pk }}</p>
-
-<form method="post">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-outline-dark">Submit Order</button>
-</form>
-
-
 <div class="container">
   <div class="row">
-    {% for vehicle in station_fleet %}
 
-      <div class="col-md-4 col-sm-6">
-        <a href="{% url 'order form' station_id=station_id order_pk=order_pk vehicle_path=vehicle.get_path %}">
-          <div class="card mb-4">
-            <div class="card-header text-center">
-              {{ vehicle.name }}
-            </div>
+    <div class="col-md-9 col-sm-8">
+      <div class="row">
 
-            <div class="card-body">
-              <p class="card-text">{{ vehicle_description }}</p>
-              <p class="card-text text-muted small">{{ station_path }}</p>
-            </div>
+        {% for vehicle in station_fleet %}
+          <div class="col-md-4 col-sm-6">
+            <a href="{% url 'make vehicle order' station_id=station_id order_pk=order_pk vehicle_path=vehicle.get_path %}">
 
+              <div class="card mb-4">
+                <div class="card-header text-center">
+                  {{ vehicle.name }}
+                </div>
+
+                <div class="card-body">
+                  <p class="card-text">{{ vehicle_description }}</p>
+                  <p class="card-text text-muted small">{{ station_path }}</p>
+                </div>
+              </div>
+
+            </a>
           </div>
-        </a>
-      </div>
+        {% endfor %}
 
-    {% endfor %}
+      </div> {# /row #}
+    </div> {# /div with vehiles #}
+
+    <div class="col-md-3 col-sm-4">
+      <div class="row">
+
+        <div class="card mb-4">
+          <div class="card-header text-center">
+            Order #{{ order_pk }}
+          </div> {# card-header #}
+
+          <div class="card-body">
+            {% if vehicle_orders %}
+              <p class="card-text">VehicleOrder exists.</p>
+              <p class="card-text">VehicleOrderToItemAssociation`s here first grouped by Vehicle, then by Bag. Finally
+                show Item and quantity ordered.</p>
+            {% else %}
+              <p class="card-text">No VehicleOrders message</p>
+            {% endif %}
+            <p class="card-text">{{ dummy_text }}</p>
+          </div> {# card-body #}
+
+          <div class="card-footer" style="text-align: center">
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-dark">Submit Order</button>
+            </form>
+          </div> {# /card-footer #}
+        </div> {# /card #}
+
+      </div> {# /row #}
+    </div> {# /div.col with StationOrder #}
+
   </div> {# /row #}
-
 </div> {# /container #}
 
 <!-- Optional JavaScript -->

@@ -44,8 +44,33 @@ def make_station_order(request, station_id, order_pk):
     station_fleet = Vehicle.objects.filter(station=station_id)
     station_order = StationOrder.objects.get(pk=order_pk)
 
+    # get ALL VehicleOrder-s associated with StationOrder
+    vehicle_orders = station_order.vehicleorder_set.all().order_by('-vehicle')
+    print('\nvehicle_orders:\n  %s' % vehicle_orders)
+
+    # get ALL VehicleOrderToItemAssociation-s associated with ALL VehicleOrder-s from above
+    vehicle_order_to_item_associations = [
+        vehicle_order_to_item_association
+        for vehicle_order in vehicle_orders
+        for vehicle_order_to_item_association in vehicle_order.vehicleordertoitemassociation_set.all()
+    ]
+    print('\nvehicle_order_to_item_associations:\n  %s\n' % vehicle_order_to_item_associations)
+
+    for vehicle_order_to_item_association in vehicle_order_to_item_associations:
+        print('%s - %s: %s x%s' % (vehicle_order_to_item_association.vehicle_order.vehicle,
+                                   vehicle_order_to_item_association.bag,
+                                   vehicle_order_to_item_association.item,
+                                   vehicle_order_to_item_association.quantity))
+
     if request.method == 'POST':
+        station_order.is_submitted = True
+        station_order.save()
         return redirect('station order confirmation', station_id, order_pk)
+
+    vehicle_description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ' \
+                          'ut labore et dolore magna aliqua.'
+    dummy_text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' \
+                 'labore et dolore magna aliqua.'
 
     template = 'make_station_order.html'
     context = {
@@ -54,8 +79,10 @@ def make_station_order(request, station_id, order_pk):
         'station_name': station_name,
         'station_fleet': station_fleet,
         'station_order': station_order,
+        'vehicle_orders': vehicle_orders,
         'img_src': 'https://via.placeholder.com/150x100.png',
-        'vehicle_description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        'vehicle_description': vehicle_description,
+        'dummy_text': dummy_text
     }
     return render(request, template, context)
 
@@ -63,17 +90,20 @@ def make_station_order(request, station_id, order_pk):
 def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     station = Station.objects.get(station_id=station_id)
     station_name = station.get_name()
+    station_order = StationOrder.objects.get(pk=order_pk)
 
     vehicle_name = vehicle_path.replace('_', ' ')  # TODO I don't like this part.
     vehicle_name = vehicle_name.capitalize()       # TODO Create vehicle_id field instead?
     vehicle = Vehicle.objects.get(name=vehicle_name)
 
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
-    vehicle_bags = [vehicle_to_bag_association.bag for vehicle_to_bag_association in vehicle_to_bag_associations]
+    vehicle_bags = [vehicle_to_bag_association.bag
+                    for vehicle_to_bag_association in vehicle_to_bag_associations]
 
     if request.method == 'POST':
         r = request.POST
-        vehicle_order = VehicleOrder.objects.create(vehicle=vehicle)
+        vehicle_order = VehicleOrder.objects.create(vehicle=vehicle,
+                                                    station_order=station_order)
 
         for key, value in r.items():
             try:
