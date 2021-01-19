@@ -56,11 +56,23 @@ def make_station_order(request, station_id, order_pk):
     ]
     print('\nvehicle_order_to_item_associations:\n  %s\n' % vehicle_order_to_item_associations)
 
+    votia_grouped = {} # vehicle_order_to_item_association
     for vehicle_order_to_item_association in vehicle_order_to_item_associations:
-        print('%s - %s: %s x%s' % (vehicle_order_to_item_association.vehicle_order.vehicle,
-                                   vehicle_order_to_item_association.bag,
-                                   vehicle_order_to_item_association.item,
-                                   vehicle_order_to_item_association.quantity))
+        vehicle_name = vehicle_order_to_item_association.vehicle_order.vehicle.name
+        if vehicle_name not in votia_grouped.keys():
+            votia_grouped[vehicle_name] = {}
+
+        bag_name = vehicle_order_to_item_association.bag.name
+        if bag_name not in votia_grouped[vehicle_name].keys():
+            votia_grouped[vehicle_name][bag_name] = {}
+
+        item_name = vehicle_order_to_item_association.item.name
+        if item_name not in votia_grouped[vehicle_name][bag_name].keys():
+            votia_grouped[vehicle_name][bag_name][item_name] = 0
+
+        item_quantity = vehicle_order_to_item_association.quantity
+        votia_grouped[vehicle_name][bag_name][item_name] += item_quantity
+    print('\ngrouped_by_vehicle: ', votia_grouped)
 
     if request.method == 'POST':
         station_order.is_submitted = True
