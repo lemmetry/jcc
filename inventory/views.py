@@ -46,7 +46,6 @@ def make_station_order(request, station_id, order_pk):
 
     # get ALL VehicleOrder-s associated with StationOrder
     vehicle_orders = station_order.vehicleorder_set.all().order_by('-vehicle')
-    print('\nvehicle_orders:\n  %s' % vehicle_orders)
 
     # get ALL VehicleOrderToItemAssociation-s associated with ALL VehicleOrder-s from above
     vehicle_order_to_item_associations = [
@@ -54,13 +53,27 @@ def make_station_order(request, station_id, order_pk):
         for vehicle_order in vehicle_orders
         for vehicle_order_to_item_association in vehicle_order.vehicleordertoitemassociation_set.all()
     ]
-    print('\nvehicle_order_to_item_associations:\n  %s\n' % vehicle_order_to_item_associations)
 
+    items_of_station_order_grouped_by_vehicle_then_bag = {}
     for vehicle_order_to_item_association in vehicle_order_to_item_associations:
-        print('%s - %s: %s x%s' % (vehicle_order_to_item_association.vehicle_order.vehicle,
-                                   vehicle_order_to_item_association.bag,
-                                   vehicle_order_to_item_association.item,
-                                   vehicle_order_to_item_association.quantity))
+        vehicle_name = vehicle_order_to_item_association.vehicle_order.vehicle.name
+        if vehicle_name not in items_of_station_order_grouped_by_vehicle_then_bag.keys():
+            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name] = {}
+
+        bag_name = vehicle_order_to_item_association.bag.name
+        if bag_name not in items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name].keys():
+            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name] = {}
+
+        item_display_name = '%s %s, %s' % (
+            vehicle_order_to_item_association.item.name,
+            vehicle_order_to_item_association.item.size,
+            vehicle_order_to_item_association.item.brand
+        )
+        if item_display_name not in items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name].keys():
+            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] = 0
+
+        item_quantity = vehicle_order_to_item_association.quantity
+        items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] += item_quantity
 
     if request.method == 'POST':
         station_order.is_submitted = True
@@ -78,8 +91,7 @@ def make_station_order(request, station_id, order_pk):
         'order_pk': order_pk,
         'station_name': station_name,
         'station_fleet': station_fleet,
-        'station_order': station_order,
-        'vehicle_orders': vehicle_orders,
+        'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
         'img_src': 'https://via.placeholder.com/150x100.png',
         'vehicle_description': vehicle_description,
         'dummy_text': dummy_text

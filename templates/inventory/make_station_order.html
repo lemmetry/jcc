@@ -59,10 +59,16 @@
           </div> {# card-header #}
 
           <div class="card-body">
-            {% if vehicle_orders %}
-              <p class="card-text">VehicleOrder exists.</p>
-              <p class="card-text">VehicleOrderToItemAssociation`s here first grouped by Vehicle, then by Bag. Finally
-                show Item and quantity ordered.</p>
+            {% if items_of_station_order_grouped_by_vehicle_then_bag %}
+              {% for vehicle, bag_dict in items_of_station_order_grouped_by_vehicle_then_bag.items %}
+                <p class="card-text">{{ vehicle }}</p>
+                {% for bag, item_dict in bag_dict.items %}
+                  <p class="card-text">-{{ bag }}</p>
+                  {% for item, quantity in item_dict.items %}
+                    <p class="card-text">---{{ item }} x{{ quantity }}</p>
+                  {% endfor %}
+                {% endfor %}
+              {% endfor %}
             {% else %}
               <p class="card-text">No VehicleOrders message</p>
             {% endif %}
