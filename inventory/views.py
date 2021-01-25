@@ -44,36 +44,7 @@ def make_station_order(request, station_id, order_pk):
     station_fleet = Vehicle.objects.filter(station=station_id)
     station_order = StationOrder.objects.get(pk=order_pk)
 
-    # get ALL VehicleOrder-s associated with StationOrder
-    vehicle_orders = station_order.vehicleorder_set.all().order_by('-vehicle')
-
-    # get ALL VehicleOrderToItemAssociation-s associated with ALL VehicleOrder-s from above
-    vehicle_order_to_item_associations = [
-        vehicle_order_to_item_association
-        for vehicle_order in vehicle_orders
-        for vehicle_order_to_item_association in vehicle_order.vehicleordertoitemassociation_set.all()
-    ]
-
-    items_of_station_order_grouped_by_vehicle_then_bag = {}
-    for vehicle_order_to_item_association in vehicle_order_to_item_associations:
-        vehicle_name = vehicle_order_to_item_association.vehicle_order.vehicle.name
-        if vehicle_name not in items_of_station_order_grouped_by_vehicle_then_bag.keys():
-            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name] = {}
-
-        bag_name = vehicle_order_to_item_association.bag.name
-        if bag_name not in items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name].keys():
-            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name] = {}
-
-        item_display_name = '%s %s, %s' % (
-            vehicle_order_to_item_association.item.name,
-            vehicle_order_to_item_association.item.size,
-            vehicle_order_to_item_association.item.brand
-        )
-        if item_display_name not in items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name].keys():
-            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] = 0
-
-        item_quantity = vehicle_order_to_item_association.quantity
-        items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] += item_quantity
+    items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
     if request.method == 'POST':
         station_order.is_submitted = True
@@ -180,52 +151,9 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
 def station_order_confirmation(request, station_id, order_pk):
     station_order = StationOrder.objects.get(pk=order_pk)
     station_order_timestamp = station_order.timestamp
-    vehicle_orders = station_order.vehicleorder_set.all()
 
-    vehicle_order_to_item_associations = [
-        vehicle_order_to_item_association
-        for vehicle_order in vehicle_orders
-        for vehicle_order_to_item_association in vehicle_order.vehicleordertoitemassociation_set.all()
-    ]
-
-    items_of_station_order_grouped_by_vehicle_then_bag = {}
-    for vehicle_order_to_item_association in vehicle_order_to_item_associations:
-        vehicle_name = vehicle_order_to_item_association.vehicle_order.vehicle.name
-        if vehicle_name not in items_of_station_order_grouped_by_vehicle_then_bag.keys():
-            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name] = {}
-
-        bag_name = vehicle_order_to_item_association.bag.name
-        if bag_name not in items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name].keys():
-            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name] = {}
-
-        item_display_name = '%s %s, %s' % (
-            vehicle_order_to_item_association.item.name,
-            vehicle_order_to_item_association.item.size,
-            vehicle_order_to_item_association.item.brand
-        )
-        if item_display_name not in items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name].keys():
-            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] = 0
-
-        item_quantity = vehicle_order_to_item_association.quantity
-        items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] += item_quantity
-
-    items_of_station_order_summed_regardless_of_location = {}
-    for vehicle_order_to_item_association in vehicle_order_to_item_associations:
-        print(vehicle_order_to_item_association)
-
-        item_display_name = '%s %s, %s' % (
-            vehicle_order_to_item_association.item.name,
-            vehicle_order_to_item_association.item.size,
-            vehicle_order_to_item_association.item.brand
-        )
-
-        if item_display_name not in items_of_station_order_summed_regardless_of_location.keys():
-            items_of_station_order_summed_regardless_of_location[item_display_name] = 0
-
-        item_quantity = vehicle_order_to_item_association.quantity
-        items_of_station_order_summed_regardless_of_location[item_display_name] += item_quantity
-
-    print(items_of_station_order_summed_regardless_of_location)
+    items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
+    items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
     template = 'station_order_confirmation.html'
     context = {
