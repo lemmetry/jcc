@@ -261,6 +261,61 @@ class StationOrder(models.Model):
     is_submitted = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def get_vehicle_order_to_item_associations(self):
+        vehicle_orders = self.vehicleorder_set.all()
+        vehicle_order_to_item_associations = [
+            vehicle_order_to_item_association
+            for vehicle_order in vehicle_orders
+            for vehicle_order_to_item_association in vehicle_order.vehicleordertoitemassociation_set.all()
+        ]
+        return vehicle_order_to_item_associations
+
+    def get_items_grouped_by_vehicle_then_bag(self):
+        items_grouped_by_vehicle_then_bag = {}
+
+        vehicle_order_to_item_associations = self.get_vehicle_order_to_item_associations()
+        for vehicle_order_to_item_association in vehicle_order_to_item_associations:
+            vehicle_name = vehicle_order_to_item_association.vehicle_order.vehicle.name
+            if vehicle_name not in items_grouped_by_vehicle_then_bag.keys():
+                items_grouped_by_vehicle_then_bag[vehicle_name] = {}
+
+            bag_name = vehicle_order_to_item_association.bag.name
+            if bag_name not in items_grouped_by_vehicle_then_bag[vehicle_name].keys():
+                items_grouped_by_vehicle_then_bag[vehicle_name][bag_name] = {}
+
+            item_display_name = '%s %s, %s' % (
+                vehicle_order_to_item_association.item.name,
+                vehicle_order_to_item_association.item.size,
+                vehicle_order_to_item_association.item.brand
+            )
+
+            if item_display_name not in items_grouped_by_vehicle_then_bag[vehicle_name][bag_name].keys():
+                items_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] = 0
+
+            item_quantity = vehicle_order_to_item_association.quantity
+            items_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] += item_quantity
+
+        return items_grouped_by_vehicle_then_bag
+
+    def get_items_summed_regardless_of_location(self):
+        items_summed_regardless_of_location = {}
+
+        vehicle_order_to_item_associations = self.get_vehicle_order_to_item_associations()
+        for vehicle_order_to_item_association in vehicle_order_to_item_associations:
+            item_display_name = '%s %s, %s' % (
+                vehicle_order_to_item_association.item.name,
+                vehicle_order_to_item_association.item.size,
+                vehicle_order_to_item_association.item.brand
+            )
+
+            if item_display_name not in items_summed_regardless_of_location.keys():
+                items_summed_regardless_of_location[item_display_name] = 0
+
+            item_quantity = vehicle_order_to_item_association.quantity
+            items_summed_regardless_of_location[item_display_name] += item_quantity
+
+        return items_summed_regardless_of_location
+
     def __str__(self):
         return '%s %s %s' % (self.station.get_name(),
                              self.timestamp.strftime("%d %B, %Y at %H:%M:%S"),
