@@ -179,10 +179,59 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
 
 def station_order_confirmation(request, station_id, order_pk):
     station_order = StationOrder.objects.get(pk=order_pk)
+    station_order_timestamp = station_order.timestamp
     vehicle_orders = station_order.vehicleorder_set.all()
+
+    vehicle_order_to_item_associations = [
+        vehicle_order_to_item_association
+        for vehicle_order in vehicle_orders
+        for vehicle_order_to_item_association in vehicle_order.vehicleordertoitemassociation_set.all()
+    ]
+
+    items_of_station_order_grouped_by_vehicle_then_bag = {}
+    for vehicle_order_to_item_association in vehicle_order_to_item_associations:
+        vehicle_name = vehicle_order_to_item_association.vehicle_order.vehicle.name
+        if vehicle_name not in items_of_station_order_grouped_by_vehicle_then_bag.keys():
+            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name] = {}
+
+        bag_name = vehicle_order_to_item_association.bag.name
+        if bag_name not in items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name].keys():
+            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name] = {}
+
+        item_display_name = '%s %s, %s' % (
+            vehicle_order_to_item_association.item.name,
+            vehicle_order_to_item_association.item.size,
+            vehicle_order_to_item_association.item.brand
+        )
+        if item_display_name not in items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name].keys():
+            items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] = 0
+
+        item_quantity = vehicle_order_to_item_association.quantity
+        items_of_station_order_grouped_by_vehicle_then_bag[vehicle_name][bag_name][item_display_name] += item_quantity
+
+    items_of_station_order_summed_regardless_of_location = {}
+    for vehicle_order_to_item_association in vehicle_order_to_item_associations:
+        print(vehicle_order_to_item_association)
+
+        item_display_name = '%s %s, %s' % (
+            vehicle_order_to_item_association.item.name,
+            vehicle_order_to_item_association.item.size,
+            vehicle_order_to_item_association.item.brand
+        )
+
+        if item_display_name not in items_of_station_order_summed_regardless_of_location.keys():
+            items_of_station_order_summed_regardless_of_location[item_display_name] = 0
+
+        item_quantity = vehicle_order_to_item_association.quantity
+        items_of_station_order_summed_regardless_of_location[item_display_name] += item_quantity
+
+    print(items_of_station_order_summed_regardless_of_location)
 
     template = 'station_order_confirmation.html'
     context = {
-        'vehicle_orders': vehicle_orders
+        'order_pk': order_pk,
+        'station_order_timestamp': station_order_timestamp,
+        'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
+        'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location
     }
     return render(request, template, context)

@@ -17,20 +17,63 @@
 <div class="row">
   <div class="col-md-6" style="float:none; margin:auto; text-align: center">
     <p>Order confirmation message here.</p>
+    <p>Order #{{ order_pk }}</p>
+    <p>{{ station_order_timestamp }}</p>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-6" style="float:none; margin:auto; text-align: center">
+<div class="container">
+  <div class="row">
 
-    {% for order in orders %}
-      <p>{{ order.vehicle_order }}: {{ order.item }} x{{ order.quantity }}</p>
-    {% endfor %}
+    <div class="col-md-6">
 
-  </div>
-</div>
+      <div class="card">
+        <div class="card-header text-center">
+          Station copy
+        </div>
 
-<div class="row">
+        <div class="card-body">
+          {% if items_of_station_order_grouped_by_vehicle_then_bag %}
+            {% for vehicle, bag_dict in items_of_station_order_grouped_by_vehicle_then_bag.items %}
+              <p class="card-text">{{ vehicle }}</p>
+              {% for bag, item_dict in bag_dict.items %}
+                <p class="card-text">-{{ bag }}</p>
+                {% for item, quantity in item_dict.items %}
+                  <p class="card-text">---{{ item }} x{{ quantity }}</p>
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          {% else %}
+            <p class="card-text">No items message</p>
+          {% endif %}
+        </div> {# /.card-body #}
+      </div> {# /.card #}
+
+    </div> {# /.col-md #}
+    <div class="col-md-6">
+
+      <div class="card">
+        <div class="card-header" style="text-align: center">
+          Delivery copy
+        </div>
+
+        <div class="card-body">
+          {% if items_of_station_order_grouped_by_vehicle_then_bag %}
+            {% for item, quantity in items_of_station_order_summed_regardless_of_location.items %}
+              <p class="card-text">---{{ item }} x{{ quantity }}</p>
+            {% endfor %}
+          {% else %}
+            <p class="card-text">No items message</p>
+          {% endif %}
+        </div> {# /.card-body #}
+      </div> {# /.card #}
+
+    </div> {# /.col-md #}
+
+  </div> {# /.row #}
+</div> {# /.container #}
+
+<div class="row pt-3">
   <div class="col-md-6" style="float:none; margin:auto; text-align: center">
     <a href="{% url 'home' %}"
        class="btn btn-light active"
