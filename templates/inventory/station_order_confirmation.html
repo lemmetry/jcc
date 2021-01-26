@@ -14,128 +14,92 @@
 
 <body style="overflow-y:scroll;">
 
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'station orders dashboard' station_id=station_id %}">{{ station_name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Order #{{ order_pk }}</li>
+  </ol>
+</nav>
+
 <div class="row mt-5 mb-3">
   <div class="col-md-6" style="float:none; margin:auto; text-align: center">
-    <p class="h4 font-weight-bold">Order confirmation</p>
-    <p>Order #{{ order_pk }} was submitted {{ station_order_timestamp.date|date:"l, M d, Y" }} at
-      {{ station_order_timestamp.time|date:"Hi" }}.</p>
+    <p class="h5 font-weight-bold">Please review your order</p>
   </div>
 </div>
 
 <div class="container">
   <div class="row">
 
-    <div class="col-md-6">
+      {% if items_of_station_order_grouped_by_vehicle_then_bag %}
+        {% for vehicle, bag_dict in items_of_station_order_grouped_by_vehicle_then_bag.items %}
+          <div class="col-md-6">
 
-      <div class="card">
-        <div class="card-header text-center">
-          Station copy
-        </div>
-
-        <div class="card-body">
-          {% if items_of_station_order_grouped_by_vehicle_then_bag %}
-
-              {% for vehicle, bag_dict in items_of_station_order_grouped_by_vehicle_then_bag.items %}
-
-                <div class="row">
-                  <div class="col-md-12">
-                    <p class="card-text h5 text-center">{{ vehicle }}</p>
-                  </div>
+              <div class="card mb-3">
+                <div class="card-header text-center">
+                  {{ vehicle }}
                 </div>
 
-                {% for bag, item_dict in bag_dict.items %}
-                  <div class="row no-gutters">
-                    <div class="col-md-12 bg-light">
-                     {{ bag }}
-                    </div>
-                  </div>
+                <div class="card-body">
 
-                  <div class="row">
-                    <div class="col-md-12">
-                        <ul class="list-group list-group-flush">
-                          {% for item, quantity in item_dict.items %}
-                            <li class="list-group-item list-group-item-action">
-                              <div class="row">
-                                <div class="col-sm-9">
-                                  {{ item }}
-                                </div>
-                                <div class="col-sm-3 text-right align-self-center">
-                                  {{ quantity }}
-                                </div>
-                              </div>
-                            </li>
-                          {% endfor %} <!-- /item, quantity -->
-                        </ul>
-                        <div class="row mb-4"></div>
-                    </div>
-                  </div>
-
-                {% endfor %} <!-- /bag, item_dict -->
-              {% endfor %} <!-- /vehicle, bag_dict -->
-
-          {% else %}
-            <p class="card-text">No items message</p>
-          {% endif %}
-        </div> <!-- /.card-body -->
-      </div> <!-- /.card -->
-
-    </div> <!-- /.col-md -->
-    <div class="col-md-6">
-
-      <div class="card">
-        <div class="card-header" style="text-align: center">
-          Delivery copy
-        </div>
-
-        <div class="card-body">
-          {% if items_of_station_order_grouped_by_vehicle_then_bag %}
-            <div class="row">
-              <div class="col-md-12">
-                <p class="card-text h5 text-center">Station # _here_</p>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12">
-
-                <ul class="list-group list-group-flush">
-                  {% for item, quantity in items_of_station_order_summed_regardless_of_location.items %}
-                    <li class="list-group-item list-group-item-action">
-                      <div class="row">
-
-                        <div class="col-sm-9">
-                          {{ item }}
-                        </div>
-                        <div class="col-sm-3 text-right align-self-center">
-                          {{ quantity }}
-                        </div>
-
+                  {% for bag, item_dict in bag_dict.items %}
+                    <div class="row no-gutters">
+                      <div class="col-md-12 bg-light">
+                       {{ bag }}
                       </div>
-                    </li>
-                  {% endfor %}
-                </ul>
+                    </div>
 
-              </div> <!-- /.col-md -->
-            </div> <!-- /.row -->
+                    <div class="row">
+                      <div class="col-md-12">
+                          <ul class="list-group list-group-flush">
+                            {% for item, quantity in item_dict.items %}
+                              <li class="list-group-item list-group-item-action">
+                                <div class="row">
+                                  <div class="col-sm-9">
+                                    {{ item }}
+                                  </div>
+                                  <div class="col-sm-3 text-right align-self-center">
+                                    {{ quantity }}
+                                  </div>
+                                </div>
+                              </li>
+                            {% endfor %} <!-- /item, quantity -->
+                          </ul>
+                          <div class="row mb-4"></div>
+                      </div>
+                    </div>
 
-          {% else %}
-            <p class="card-text">No items message</p>
-          {% endif %}
-        </div> {# /.card-body #}
-      </div> {# /.card #}
+                  {% endfor %} <!-- /bag, item_dict -->
 
-    </div> {# /.col-md #}
+                </div> <!-- /.card-body -->
+              </div> <!-- /.card -->
+
+          </div> <!-- /.col-md -->
+
+        {% endfor %} <!-- /vehicle, bag_dict -->
+      {% else %}
+        <p class="card-text">No items message</p>
+      {% endif %}
+
 
   </div> {# /.row #}
 </div> {# /.container #}
 
-<div class="row pt-3">
-  <div class="col-md-6" style="float:none; margin:auto; text-align: center">
-    <a href="{% url 'home' %}"
-       class="btn btn-light active"
-       role="button"
-       aria-pressed="true">Main Page
-    </a>
+<div class="container">
+  <div class="row pt-3">
+    <div class="col-md-6 text-center">
+      <a href="{% url 'make station order' station_id=station_id order_pk=order_pk %}"
+         class="btn btn-outline-dark"
+         role="button"
+         aria-pressed="true">Continue to Order
+      </a>
+    </div>
+    <div class="col-md-6 text-center">
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-dark">Submit Order</button>
+      </form>
+    </div>
   </div>
 </div>
 

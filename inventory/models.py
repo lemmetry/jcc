@@ -221,7 +221,7 @@ class VehicleOrder(models.Model):
                                 blank=True,
                                 null=True,
                                 on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    # timestamp = models.DateTimeField(auto_now_add=True)
     station_order = models.ForeignKey('StationOrder',
                                       blank=True,
                                       null=True,

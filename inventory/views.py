@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.utils import timezone
 
 from fleet.models import Station
 from fleet.models import Vehicle
@@ -45,11 +46,6 @@ def make_station_order(request, station_id, order_pk):
     station_order = StationOrder.objects.get(pk=order_pk)
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
-
-    if request.method == 'POST':
-        station_order.is_submitted = True
-        station_order.save()
-        return redirect('station order confirmation', station_id, order_pk)
 
     vehicle_description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ' \
                           'ut labore et dolore magna aliqua.'
@@ -149,15 +145,47 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
 
 
 def station_order_confirmation(request, station_id, order_pk):
+    station = Station.objects.get(station_id=station_id)
+    station_name = station.get_name()
     station_order = StationOrder.objects.get(pk=order_pk)
     station_order_timestamp = station_order.timestamp
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
+    if request.method == 'POST':
+        station_order.is_submitted = True
+        station_order.timestamp = timezone.now()
+        station_order.save()
+
+        return redirect('station order summary', station_id, order_pk)
+
     template = 'station_order_confirmation.html'
     context = {
+        'station_id': station_id,
         'order_pk': order_pk,
+        'station_name': station_name,
+        'station_order_timestamp': station_order_timestamp,
+        'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
+        'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location
+    }
+    return render(request, template, context)
+
+
+def station_order_summary(request, station_id, order_pk):
+    station = Station.objects.get(station_id=station_id)
+    station_name = station.get_name()
+    station_order = StationOrder.objects.get(pk=order_pk)
+    station_order_timestamp = station_order.timestamp
+
+    items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
+    items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
+
+    template = 'station_order_summary.html'
+    context = {
+        'station_id': station_id,
+        'order_pk': order_pk,
+        'station_name': station_name,
         'station_order_timestamp': station_order_timestamp,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
         'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location
