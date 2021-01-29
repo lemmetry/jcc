@@ -76,10 +76,10 @@
           </div> {# card-body #}
 
           <div class="card-footer" style="text-align: center">
-            <form method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-dark">Submit Order</button>
-            </form>
+            <a href="{% url "station order confirmation" station_id=station_id order_pk=order_pk %}"
+               class="btn btn-outline-dark"
+               role="button">Review and Submit
+            </a>
           </div> {# /card-footer #}
         </div> {# /card #}
 

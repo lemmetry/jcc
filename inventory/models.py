@@ -221,14 +221,13 @@ class VehicleOrder(models.Model):
                                 blank=True,
                                 null=True,
                                 on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
     station_order = models.ForeignKey('StationOrder',
                                       blank=True,
                                       null=True,
                                       on_delete=models.CASCADE)
 
     def __str__(self):
-        return '%s: %s' % (self.vehicle.name, self.timestamp.strftime("%d %B, %Y at %H:%M:%S"))
+        return self.vehicle.name
 
 
 class VehicleOrderToItemAssociation(models.Model):
