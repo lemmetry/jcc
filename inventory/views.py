@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.utils import timezone
+from django.core.mail import EmailMessage
 
 from fleet.models import Station
 from fleet.models import Vehicle
@@ -148,7 +149,6 @@ def station_order_confirmation(request, station_id, order_pk):
     station = Station.objects.get(station_id=station_id)
     station_name = station.get_name()
     station_order = StationOrder.objects.get(pk=order_pk)
-    station_order_timestamp = station_order.timestamp
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
@@ -158,6 +158,29 @@ def station_order_confirmation(request, station_id, order_pk):
         station_order.timestamp = timezone.now()
         station_order.save()
 
+        email_subject = '%s, Order #%s' % (station_name, order_pk)
+        email_body = "\n".join(
+            "%s x%s" % (item, quantity)
+            for item, quantity
+            in items_of_station_order_summed_regardless_of_location.items()
+        )
+        station_order_timestamp = station_order.timestamp
+        email_body += "\nSubmitted: %s at %s." % (
+            station_order_timestamp.strftime('%A, %b %d, %Y'),
+            station_order_timestamp.strftime('%H%M')
+        )
+
+        email_sender = ''
+        email_receivers = ['']
+
+        email = EmailMessage(
+            subject=email_subject,
+            body=email_body,
+            from_email=email_sender,
+            to=email_receivers
+        )
+        email.send(fail_silently=False)
+
         return redirect('station order summary', station_id, order_pk)
 
     template = 'station_order_confirmation.html'
@@ -165,7 +188,6 @@ def station_order_confirmation(request, station_id, order_pk):
         'station_id': station_id,
         'order_pk': order_pk,
         'station_name': station_name,
-        'station_order_timestamp': station_order_timestamp,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
         'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location
     }
