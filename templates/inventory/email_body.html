@@ -1,0 +1,7 @@
+<p>
+{% for item, quantity in items_of_station_order_summed_regardless_of_location.items %}
+  <br>{{ item }} x{{ quantity }}
+{% endfor %}
+</p>
+
+<p>Submitted: {{ station_order_timestamp.date|date:"l, M d, Y" }} at {{ station_order_timestamp.time|date:"Hi" }}.</p>

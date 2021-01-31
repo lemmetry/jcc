@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.utils import timezone
-from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import EmailMultiAlternatives
 
 from fleet.models import Station
 from fleet.models import Vehicle
@@ -73,7 +75,7 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     station_order = StationOrder.objects.get(pk=order_pk)
 
     vehicle_name = vehicle_path.replace('_', ' ')  # TODO I don't like this part.
-    vehicle_name = vehicle_name.capitalize()       # TODO Create vehicle_id field instead?
+    vehicle_name = vehicle_name.capitalize()  # TODO Create vehicle_id field instead?
     vehicle = Vehicle.objects.get(name=vehicle_name)
 
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
@@ -158,28 +160,28 @@ def station_order_confirmation(request, station_id, order_pk):
         station_order.timestamp = timezone.now()
         station_order.save()
 
-        email_subject = '%s, Order #%s' % (station_name, order_pk)
-        email_body = "\n".join(
-            "%s x%s" % (item, quantity)
-            for item, quantity
-            in items_of_station_order_summed_regardless_of_location.items()
-        )
+        email_subject = render_to_string(template_name='email_subject.txt',
+                                         context={
+                                             'station_name': station_name,
+                                             'order_pk': order_pk
+                                         }
+                                         )
+
         station_order_timestamp = station_order.timestamp
-        email_body += "\nSubmitted: %s at %s." % (
-            station_order_timestamp.strftime('%A, %b %d, %Y'),
-            station_order_timestamp.strftime('%H%M')
-        )
+        email_body_in_html = render_to_string(template_name='email_body.html',
+                                              context={
+                                                  'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location,
+                                                  'station_order_timestamp': station_order_timestamp
+                                              }
+                                              )
+        email_body_plain = strip_tags(email_body_in_html)
 
-        email_sender = ''
-        email_receivers = ['']
-
-        email = EmailMessage(
-            subject=email_subject,
-            body=email_body,
-            from_email=email_sender,
-            to=email_receivers
-        )
-        email.send(fail_silently=False)
+        email = EmailMultiAlternatives(subject=email_subject,
+                                       from_email='',
+                                       to=[''],
+                                       body=email_body_plain)
+        email.attach_alternative(email_body_in_html, 'text/html')
+        email.send()
 
         return redirect('station order summary', station_id, order_pk)
 
