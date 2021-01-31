@@ -170,11 +170,18 @@ def station_order_confirmation(request, station_id, order_pk):
         station_order_timestamp = station_order.timestamp
         email_body_in_html = render_to_string(template_name='email_body.html',
                                               context={
-                                                  'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location,
+                                                  'items_of_station_order_summed_regardless_of_location':
+                                                      items_of_station_order_summed_regardless_of_location,
                                                   'station_order_timestamp': station_order_timestamp
                                               }
                                               )
-        email_body_plain = strip_tags(email_body_in_html)
+        email_body_plain = render_to_string(template_name='email_body.txt',
+                                            context={
+                                                'items_of_station_order_summed_regardless_of_location':
+                                                    items_of_station_order_summed_regardless_of_location,
+                                                'station_order_timestamp': station_order_timestamp
+                                            }
+                                            )
 
         email = EmailMultiAlternatives(subject=email_subject,
                                        from_email='',
