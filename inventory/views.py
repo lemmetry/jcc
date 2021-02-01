@@ -160,24 +160,19 @@ def station_order_confirmation(request, station_id, order_pk):
         station_order.timestamp = timezone.now()
         station_order.save()
 
-        email_subject = render_to_string(template_name='email_subject.txt',
-                                         context={
-                                             'station_name': station_name,
-                                             'order_pk': order_pk
-                                         }
-                                         )
-
         station_order_timestamp = station_order.timestamp
         email_context = {
-            'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location,
-            'station_order_timestamp': station_order_timestamp
+            'station_name': station_name,
+            'order_pk': order_pk,
+            'items_ordered': items_of_station_order_summed_regardless_of_location,
+            'order_timestamp': station_order_timestamp
         }
+        email_subject = render_to_string(template_name='email_subject.txt',
+                                         context=email_context)
         email_body_plain = render_to_string(template_name='email_body.txt',
-                                            context=email_context
-                                            )
+                                            context=email_context)
         email_body_in_html = render_to_string(template_name='email_body.html',
-                                              context=email_context
-                                              )
+                                              context=email_context)
         email = EmailMultiAlternatives(subject=email_subject,
                                        from_email='',
                                        to=[''],
