@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
+from jcc.settings import JCC_EMAIL_TO, JCC_EMAIL_FROM
 
 from fleet.models import Station
 from fleet.models import Vehicle
@@ -174,8 +174,8 @@ def station_order_confirmation(request, station_id, order_pk):
         email_body_in_html = render_to_string(template_name='email_body.html',
                                               context=email_context)
         email = EmailMultiAlternatives(subject=email_subject,
-                                       from_email='',
-                                       to=[''],
+                                       from_email=JCC_EMAIL_FROM,
+                                       to=JCC_EMAIL_TO,
                                        body=email_body_plain)
         email.attach_alternative(email_body_in_html, 'text/html')
         email.send()
