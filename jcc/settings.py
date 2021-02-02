@@ -124,3 +124,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# SendGrid SMTP
+EMAIL_HOST = os.environ['JCC_EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['JCC_EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['JCC_SENDGRID_API_KEY']
+EMAIL_PORT = os.environ['JCC_EMAIL_PORT']
+EMAIL_USE_TLS = os.environ['JCC_EMAIL_USE_TLS']
+
+# other env variables
+JCC_EMAIL_FROM = os.environ['JCC_EMAIL_FROM']
+JCC_EMAIL_TO = os.environ['JCC_EMAIL_TO']

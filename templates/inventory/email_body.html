@@ -1,0 +1,7 @@
+<p>
+{% for item, quantity in items_ordered.items %}
+  <br>{{ item }} x{{ quantity }}
+{% endfor %}
+</p>
+
+<p>Submitted: {{ order_timestamp.date|date:"l, M d, Y" }} at {{ order_timestamp.time|date:"Hi" }}.</p>

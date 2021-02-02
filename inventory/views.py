@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.utils import timezone
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from jcc.settings import JCC_EMAIL_TO, JCC_EMAIL_FROM
 
 from fleet.models import Station
 from fleet.models import Vehicle
@@ -72,7 +75,7 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     station_order = StationOrder.objects.get(pk=order_pk)
 
     vehicle_name = vehicle_path.replace('_', ' ')  # TODO I don't like this part.
-    vehicle_name = vehicle_name.capitalize()       # TODO Create vehicle_id field instead?
+    vehicle_name = vehicle_name.capitalize()  # TODO Create vehicle_id field instead?
     vehicle = Vehicle.objects.get(name=vehicle_name)
 
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
@@ -148,7 +151,6 @@ def station_order_confirmation(request, station_id, order_pk):
     station = Station.objects.get(station_id=station_id)
     station_name = station.get_name()
     station_order = StationOrder.objects.get(pk=order_pk)
-    station_order_timestamp = station_order.timestamp
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
@@ -158,6 +160,26 @@ def station_order_confirmation(request, station_id, order_pk):
         station_order.timestamp = timezone.now()
         station_order.save()
 
+        station_order_timestamp = station_order.timestamp
+        email_context = {
+            'station_name': station_name,
+            'order_pk': order_pk,
+            'items_ordered': items_of_station_order_summed_regardless_of_location,
+            'order_timestamp': station_order_timestamp
+        }
+        email_subject = render_to_string(template_name='email_subject.txt',
+                                         context=email_context)
+        email_body_plain = render_to_string(template_name='email_body.txt',
+                                            context=email_context)
+        email_body_in_html = render_to_string(template_name='email_body.html',
+                                              context=email_context)
+        email = EmailMultiAlternatives(subject=email_subject,
+                                       from_email=JCC_EMAIL_FROM,
+                                       to=[JCC_EMAIL_TO],
+                                       body=email_body_plain)
+        email.attach_alternative(email_body_in_html, 'text/html')
+        email.send()
+
         return redirect('station order summary', station_id, order_pk)
 
     template = 'station_order_confirmation.html'
@@ -165,7 +187,6 @@ def station_order_confirmation(request, station_id, order_pk):
         'station_id': station_id,
         'order_pk': order_pk,
         'station_name': station_name,
-        'station_order_timestamp': station_order_timestamp,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
         'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location
     }
