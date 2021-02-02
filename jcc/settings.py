@@ -127,12 +127,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # SendGrid SMTP
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST = os.environ['JCC_EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['JCC_EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_PORT = os.environ['JCC_EMAIL_PORT']
+EMAIL_USE_TLS = os.environ['JCC_EMAIL_USE_TLS']
 
-# env variables
+# other env variables
 JCC_EMAIL_FROM = os.environ['JCC_EMAIL_FROM']
 JCC_EMAIL_TO = os.environ['JCC_EMAIL_TO']

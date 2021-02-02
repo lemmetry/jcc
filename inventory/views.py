@@ -175,7 +175,7 @@ def station_order_confirmation(request, station_id, order_pk):
                                               context=email_context)
         email = EmailMultiAlternatives(subject=email_subject,
                                        from_email=JCC_EMAIL_FROM,
-                                       to=JCC_EMAIL_TO,
+                                       to=[JCC_EMAIL_TO],
                                        body=email_body_plain)
         email.attach_alternative(email_body_in_html, 'text/html')
         email.send()
