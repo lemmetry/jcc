@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-from jcc.secret import SENDGRID_API_KEY
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -129,7 +128,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # SendGrid SMTP
 EMAIL_HOST = os.environ['JCC_EMAIL_HOST']
 EMAIL_HOST_USER = os.environ['JCC_EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_HOST_PASSWORD = os.environ['JCC_SENDGRID_API_KEY']
 EMAIL_PORT = os.environ['JCC_EMAIL_PORT']
 EMAIL_USE_TLS = os.environ['JCC_EMAIL_USE_TLS']
 
