@@ -1,13 +1,13 @@
 [[source]]
-name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
-
-[dev-packages]
+name = "pypi"
 
 [packages]
-django = "==3.0.1"
-pillow = "==6.2.1"
+django = "*"
+pillow = "*"
+
+[dev-packages]
 
 [requires]
 python_version = "3.7"
