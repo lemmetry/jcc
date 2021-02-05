@@ -22,6 +22,9 @@ clone_repo() {
 
 start_django_server() {
   printf "\nStarting Django server...\n"
+  cd jcc
+  pipenv install
+  pipenv run ./manage.py runserver
 }
 
 vps_username=${VPS_USERNAME}
