@@ -1,5 +1,7 @@
 #!/bin/bash
 
+PATH_TO_APPS="/root/apps"
+
 ssh -t "$VPS_USERNAME"@"$VPS_IP_ADDRESS" << EOF
 export JCC_EMAIL_HOST=$JCC_EMAIL_HOST
 export JCC_EMAIL_HOST_USER=$JCC_EMAIL_HOST_USER
@@ -13,16 +15,16 @@ fuser -k 80/tcp
 printf "... Django stopped.\n"
 
 printf "\nDeleting $GITHUB_REPO_NAME folder...\n"
-rm -rf "apps/jcc/"
+rm -rf $PATH_TO_APPS/$GITHUB_REPO_NAME
 printf "... $GITHUB_REPO_NAME deleted.\n"
 
 printf "\nCloning $GITHUB_REPO_NAME app from GitHub..."
-cd apps/
+cd $PATH_TO_APPS
 git clone "https://$GITHUB_USERNAME:$GITHUB_VPS_TOKEN@github.com/$GITHUB_USERNAME/$GITHUB_REPO_NAME.git"
-printf "... 'jcc' cloned.\n"
+printf "... $GITHUB_REPO_NAME cloned.\n"
 
 printf "\nStarting Django...\n"
-cd jcc/
+cd $PATH_TO_APPS/$GITHUB_REPO_NAME
 pipenv install
 pipenv run ./manage.py runserver routinemod.com:80
 EOF
