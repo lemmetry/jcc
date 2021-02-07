@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
-from jcc.settings import JCC_EMAIL_TO, JCC_EMAIL_FROM
+from jcc.settings.base import JCC_EMAIL_TO, JCC_EMAIL_FROM
 
 from fleet.models import Station
 from fleet.models import Vehicle
