@@ -26,5 +26,5 @@ printf "... $GITHUB_REPO_NAME cloned.\n"
 printf "\nStarting Django...\n"
 cd $PATH_TO_APPS/$GITHUB_REPO_NAME
 pipenv install
-pipenv run ./manage.py runserver routinemod.com:80
+pipenv run ./manage.py runserver --settings=jcc.settings.production routinemod.com:80
 EOF
