@@ -1,33 +1,33 @@
 #!/bin/bash
 
 ssh -t "$VPS_USERNAME"@"$VPS_IP_ADDRESS" << EOF
-  export JCC_SECRET_KEY="$JCC_SECRET_KEY"
-  export JCC_EMAIL_HOST=$JCC_EMAIL_HOST
-  export JCC_EMAIL_HOST_USER=$JCC_EMAIL_HOST_USER
-  export JCC_SENDGRID_API_KEY=$JCC_SENDGRID_API_KEY
-  export JCC_EMAIL_PORT=$JCC_EMAIL_JCC_EMAIL_PORT
-  export JCC_EMAIL_USE_TLS=$JCC_EMAIL_USE_TLS
-  export JCC_EMAIL_FROM=$JCC_EMAIL_FROM
-  export JCC_EMAIL_TO=$JCC_EMAIL_TO
+export JCC_SECRET_KEY="$JCC_SECRET_KEY"
+export JCC_EMAIL_HOST=$JCC_EMAIL_HOST
+export JCC_EMAIL_HOST_USER=$JCC_EMAIL_HOST_USER
+export JCC_SENDGRID_API_KEY=$JCC_SENDGRID_API_KEY
+export JCC_EMAIL_PORT=$JCC_EMAIL_JCC_EMAIL_PORT
+export JCC_EMAIL_USE_TLS=$JCC_EMAIL_USE_TLS
+export JCC_EMAIL_FROM=$JCC_EMAIL_FROM
+export JCC_EMAIL_TO=$JCC_EMAIL_TO
 
-  if [[ "$1" == "production" ]]; then
-    BRANCH="master"
-    PATH_TO="/$VPS_USERNAME/apps"
-    PORT="80"
+if [[ "$1" == "production" ]]; then
+  BRANCH="master"
+  PATH_TO="/$VPS_USERNAME/apps"
+  PORT="80"
 
-    printf  "Deploying \$BRANCH ...\n"
+  printf  "Deploying \$BRANCH ...\n"
 
-  elif [[ "$1" == "issue"* ]]; then
-    BRANCH="$1"
-    PATH_TO="/$VPS_USERNAME/feature_preview/\$BRANCH"
-    PORT="81"
+elif [[ "$1" == "issue"* ]]; then
+  BRANCH="$1"
+  PATH_TO="/$VPS_USERNAME/feature_preview/\$BRANCH"
+  PORT="81"
 
-    printf "Deploying \$BRANCH preview...\n"
+  printf "Deploying \$BRANCH preview...\n"
 
-  else
-    printf "something wrong\n"
-    exit 1
-  fi
+else
+  printf "something wrong\n"
+  exit 1
+fi
 
 printf "\nCloning $GITHUB_REPO_NAME app from GitHub..."
 mkdir \$PATH_TO
