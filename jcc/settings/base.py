@@ -92,6 +92,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# User Authentication
+LOGIN_URL = 'user sign in'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 

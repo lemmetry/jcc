@@ -13,8 +13,13 @@
   <body style="overflow-y:scroll;">
 
     <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">Home</li>
+      <ol class="breadcrumb my-auto">
+        <li class="breadcrumb-item active my-auto" aria-current="page">Home</li>
+        <li class="ml-auto my-auto small">welcome, {{ user }}</li>
+        <a href="{% url "user sign out" %}"
+           class="btn btn-outline-primary btn-sm ml-2"
+           role="button">sign out
+        </a>
       </ol>
     </nav>
 
