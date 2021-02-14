@@ -23,17 +23,17 @@
               {% if station.get_name == 'Station 1' %}
                 <img src="{% static "fleet/logo_station_1.jpg" %}"
                      class="img-responsive mx-auto mt-4"
-                     alt="..."
+                     alt="{{ station.get_name }} logo"
                      height="200">
               {% elif station.get_name == 'Station 3' %}
                 <img src="{% static "fleet/logo_station_3.jpeg" %}"
                      class="img-responsive mx-auto mt-4"
-                     alt="..."
+                     alt="{{ station.get_name }} logo"
                      height="200">
               {% else %}
                 <img src="{% static "fleet/logo_jcc.png" %}"
                      class="img-responsive mx-auto mt-4"
-                     alt="..."
+                     alt="{{ station.get_name }} logo"
                      height="200">
               {% endif %}
 
