@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Fire {{ station_name }}{% endblock %}
+{% block title %}{{ station_name }}{% endblock %}
 
 {% block content %}
   <nav aria-label="breadcrumb">
@@ -58,7 +58,7 @@
                   {% endfor %}
                 {% endfor %}
               {% else %}
-                <p class="card-text">{{ no_vehicleorders_message }}</p>
+                <p class="card-text">No EMS supplies in this order yet.</p>
               {% endif %}
             </div> {# card-body #}
 
