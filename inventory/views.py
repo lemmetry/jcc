@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
@@ -15,6 +15,7 @@ from inventory.models import VehicleOrderToItemAssociation
 from inventory.models import StationOrder
 
 
+@login_required
 def station_orders_dashboard(request, station_id):
     station = Station.objects.get(station_id=station_id)
 
@@ -38,6 +39,7 @@ def station_orders_dashboard(request, station_id):
     return render(request, template, context)
 
 
+@login_required
 def make_station_order(request, station_id, order_pk):
     station = Station.objects.all().filter(station_id=station_id)[0]
     station_name = station.get_name()
@@ -57,6 +59,7 @@ def make_station_order(request, station_id, order_pk):
     return render(request, template, context)
 
 
+@login_required
 def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     station = Station.objects.get(station_id=station_id)
     station_name = station.get_name()
@@ -135,6 +138,7 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     return render(request, template, context)
 
 
+@login_required
 def station_order_confirmation(request, station_id, order_pk):
     station = Station.objects.get(station_id=station_id)
     station_name = station.get_name()
@@ -181,6 +185,7 @@ def station_order_confirmation(request, station_id, order_pk):
     return render(request, template, context)
 
 
+@login_required
 def station_order_summary(request, station_id, order_pk):
     station = Station.objects.get(station_id=station_id)
     station_name = station.get_name()
