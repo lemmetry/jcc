@@ -1,60 +1,54 @@
-<!doctype html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "base.html" %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% block title %}Stations{% endblock %}
 
-    <title>HERE >></title>
-  </head>
-  <body style="overflow-y:scroll;">
+{% block content %}
 
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">Home</li>
-      </ol>
-    </nav>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Home</li>
+    </ol>
+  </nav>
 
-    {% load static %}
-    <div class="container">
-      <div class="row">
-        {% for station in stations %}
+  {% load static %}
+  <div class="container">
+    <div class="row">
+      {% for station in stations %}
 
-          <div class="col-md-4 col-sm-6">
-            <a href="{% url 'station orders dashboard' station_id=station.id %}">
-              <div class="card mb-4">
+        <div class="col-md-4 col-sm-6">
+          <a href="{% url 'station orders dashboard' station_id=station.id %}">
+            <div class="card mb-4">
 
-                {#TODO make image(or path to it) Station instance field#}
-                {% if station.get_name == 'Station 1' %}
-                  <img src="{% static "fleet/logo_station_1.jpg" %}" class="img-responsive mx-auto mt-4" alt="..." height="200">
-                {% elif station.get_name == 'Station 3' %}
-                  <img src="{% static "fleet/logo_station_3.jpeg" %}" class="img-responsive mx-auto mt-4" alt="..." height="200">
-                {% else %}
-                  <img src="{% static "fleet/logo_jcc.png" %}" class="img-responsive mx-auto mt-4" alt="..." height="200">
-                {% endif %}
+              {#TODO make image(or path to it) Station instance field#}
+              {% if station.get_name == 'Station 1' %}
+                <img src="{% static "fleet/logo_station_1.jpg" %}"
+                     class="img-responsive mx-auto mt-4"
+                     alt="..."
+                     height="200">
+              {% elif station.get_name == 'Station 3' %}
+                <img src="{% static "fleet/logo_station_3.jpeg" %}"
+                     class="img-responsive mx-auto mt-4"
+                     alt="..."
+                     height="200">
+              {% else %}
+                <img src="{% static "fleet/logo_jcc.png" %}"
+                     class="img-responsive mx-auto mt-4"
+                     alt="..."
+                     height="200">
+              {% endif %}
 
-                <div class="card-body">
-                  <h5 class="card-title text-center">
-                    {{ station.get_name }}
-                  </h5>
-                </div>
-
+              <div class="card-body">
+                <h5 class="card-title text-center">
+                  {{ station.get_name }}
+                </h5>
               </div>
-            </a>
-          </div>
 
-        {% endfor %}
-      </div> {# /row #}
-    </div> {# /container #}
+            </div>
+          </a>
+        </div>
 
+      {% endfor %}
+    </div> {# /row #}
+  </div> {# /container #}
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% endblock %}

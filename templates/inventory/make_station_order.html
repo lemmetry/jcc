@@ -1,107 +1,78 @@
-<!doctype html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "base.html" %}
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous">
+{% block title %}Fire {{ station_name }}{% endblock %}
 
-  <title>Fire {{ station_name }}</title>
-</head>
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'station orders dashboard' station_id=station_id %}">{{ station_name }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Order #{{ order_pk }}</li>
+    </ol>
+  </nav>
 
-<body style="overflow-y:scroll;">
+  <div class="container">
+    <div class="row">
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ station_name }}</li>
-  </ol>
-</nav>
+      <div class="col-md-8">
+        <div class="row">
 
-<div class="container">
-  <div class="row">
+          {% for vehicle in station_fleet %}
+            <div class="col-md-4 col-sm-6">
+              <a href="{% url 'make vehicle order' station_id=station_id order_pk=order_pk vehicle_path=vehicle.get_path %}">
 
-    <div class="col-md-9 col-sm-8">
-      <div class="row">
+                <div class="card mb-4">
+                  <div class="card-header text-center">
+                    {{ vehicle.name }}
+                  </div>
 
-        {% for vehicle in station_fleet %}
-          <div class="col-md-4 col-sm-6">
-            <a href="{% url 'make vehicle order' station_id=station_id order_pk=order_pk vehicle_path=vehicle.get_path %}">
-
-              <div class="card mb-4">
-                <div class="card-header text-center">
-                  {{ vehicle.name }}
+                  <div class="card-body">
+                    <p class="card-text text-muted small">{{ station_path }}</p>
+                  </div>
                 </div>
 
-                <div class="card-body">
-                  <p class="card-text">{{ vehicle_description }}</p>
-                  <p class="card-text text-muted small">{{ station_path }}</p>
-                </div>
-              </div>
+              </a>
+            </div>
+          {% endfor %}
 
-            </a>
-          </div>
-        {% endfor %}
+        </div> {# /row #}
+      </div> {# /div with vehiles #}
 
-      </div> {# /row #}
-    </div> {# /div with vehiles #}
+      <div class="col-md-4">
+        <div class="row">
 
-    <div class="col-md-3 col-sm-4">
-      <div class="row">
+          <div class="card mb-4">
+            <div class="card-header text-center">
+              Order #{{ order_pk }}
+            </div> {# card-header #}
 
-        <div class="card mb-4">
-          <div class="card-header text-center">
-            Order #{{ order_pk }}
-          </div> {# card-header #}
-
-          <div class="card-body">
-            {% if items_of_station_order_grouped_by_vehicle_then_bag %}
-              {% for vehicle, bag_dict in items_of_station_order_grouped_by_vehicle_then_bag.items %}
-                <p class="card-text">{{ vehicle }}</p>
-                {% for bag, item_dict in bag_dict.items %}
-                  <p class="card-text">-{{ bag }}</p>
-                  {% for item, quantity in item_dict.items %}
-                    <p class="card-text">---{{ item }} x{{ quantity }}</p>
+            <div class="card-body">
+              {% if items_of_station_order_grouped_by_vehicle_then_bag %}
+                {% for vehicle, bag_dict in items_of_station_order_grouped_by_vehicle_then_bag.items %}
+                  <p class="card-text text-center mb-0">{{ vehicle }}</p>
+                  {% for bag, item_dict in bag_dict.items %}
+                    <p class="card-text text-center text-muted">{{ bag }}</p>
+                    {% for item, quantity in item_dict.items %}
+                      <p class="card-text mb-1">{{ item }} x{{ quantity }}</p>
+                    {% endfor %}
                   {% endfor %}
                 {% endfor %}
-              {% endfor %}
-            {% else %}
-              <p class="card-text">No VehicleOrders message</p>
-            {% endif %}
-            <p class="card-text">{{ dummy_text }}</p>
-          </div> {# card-body #}
+              {% else %}
+                <p class="card-text">{{ no_vehicleorders_message }}</p>
+              {% endif %}
+            </div> {# card-body #}
 
-          <div class="card-footer" style="text-align: center">
-            <a href="{% url "station order confirmation" station_id=station_id order_pk=order_pk %}"
-               class="btn btn-outline-dark"
-               role="button">Review and Submit
-            </a>
-          </div> {# /card-footer #}
-        </div> {# /card #}
+            <div class="card-footer text-center">
+              <a href="{% url "station order confirmation" station_id=station_id order_pk=order_pk %}"
+                 class="btn btn-outline-dark"
+                 role="button">Review and Submit
+              </a>
+            </div> {# /card-footer #}
+          </div> {# /card #}
 
-      </div> {# /row #}
-    </div> {# /div.col with StationOrder #}
+        </div> {# /row #}
+      </div> {# /div.col with StationOrder #}
 
-  </div> {# /row #}
-</div> {# /container #}
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous">
-</script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous">
-</script>
-</body>
-</html>
+    </div> {# /row #}
+  </div> {# /container #}
+{% endblock %}

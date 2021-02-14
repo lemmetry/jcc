@@ -50,10 +50,7 @@ def make_station_order(request, station_id, order_pk):
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
-    vehicle_description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ' \
-                          'ut labore et dolore magna aliqua.'
-    dummy_text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' \
-                 'labore et dolore magna aliqua.'
+    no_vehicleorders_message = 'No EMS supplies in this order yet.'
 
     template = 'make_station_order.html'
     context = {
@@ -62,9 +59,7 @@ def make_station_order(request, station_id, order_pk):
         'station_name': station_name,
         'station_fleet': station_fleet,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
-        'img_src': 'https://via.placeholder.com/150x100.png',
-        'vehicle_description': vehicle_description,
-        'dummy_text': dummy_text
+        'no_vehicleorders_message': no_vehicleorders_message
     }
     return render(request, template, context)
 
