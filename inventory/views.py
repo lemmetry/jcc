@@ -28,16 +28,12 @@ def station_orders_dashboard(request, station_id):
         last_five_station_orders = station.stationorder_set.all().order_by('-pk')[:5][::-1]
         if last_five_station_orders:
             last_five_station_orders = reversed(last_five_station_orders)
-            no_records_exist_message = None
-        else:
-            no_records_exist_message = "No Orders Found."
 
     template = 'station_orders_dashboard.html'
     context = {
         'station_id': station_id,
         'station_name': station_name,
-        'last_five_station_orders': last_five_station_orders,
-        'no_records_exist_message': no_records_exist_message
+        'last_five_station_orders': last_five_station_orders
     }
     return render(request, template, context)
 
@@ -50,11 +46,6 @@ def make_station_order(request, station_id, order_pk):
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
-    vehicle_description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ' \
-                          'ut labore et dolore magna aliqua.'
-    dummy_text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ' \
-                 'labore et dolore magna aliqua.'
-
     template = 'make_station_order.html'
     context = {
         'station_id': station_id,
@@ -62,9 +53,6 @@ def make_station_order(request, station_id, order_pk):
         'station_name': station_name,
         'station_fleet': station_fleet,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
-        'img_src': 'https://via.placeholder.com/150x100.png',
-        'vehicle_description': vehicle_description,
-        'dummy_text': dummy_text
     }
     return render(request, template, context)
 
@@ -74,8 +62,8 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     station_name = station.get_name()
     station_order = StationOrder.objects.get(pk=order_pk)
 
-    vehicle_name = vehicle_path.replace('_', ' ')  # TODO I don't like this part.
-    vehicle_name = vehicle_name.capitalize()  # TODO Create vehicle_id field instead?
+    vehicle_name = vehicle_path.replace('_', ' ')
+    vehicle_name = vehicle_name.capitalize()
     vehicle = Vehicle.objects.get(name=vehicle_name)
 
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()

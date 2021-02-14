@@ -1,200 +1,169 @@
-<!doctype html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "base.html" %}
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous">
+{% block title %}{{ vehicle_name }}{% endblock %}
 
-  <title>{{ vehicle_name }}</title>
-</head>
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'station orders dashboard' station_id=station_id %}">{{ station_name }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'make station order' station_id=station_id order_pk=order_pk %}">Order #{{ order_pk }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ vehicle_name }}</li>
+    </ol>
+  </nav>
 
-<body style="overflow-y:scroll;">
+  <form method="post">
+    {% csrf_token %}
+    <div class="accordion" id="bags_accordion">
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a href="{% url 'home' %}">Home</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href="{% url 'make station order' station_id=station_id order_pk=order_pk %}">{{ station_name }}</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">{{ vehicle_name }}</li>
-  </ol>
-</nav>
+      {% for vehicle_bag in vehicle_bags %}
+        <div class="card">
 
-<form method="post">{% csrf_token %}
-  <div class="accordion" id="bags_accordion">
+          <div class="card-header" id="heading{{ vehicle_bag.pk }}">
+            <h2 class="mb-0">
+              <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                      data-target="#collapse{{ vehicle_bag.pk }}" aria-expanded="true"
+                      aria-controls="collapse{{ vehicle_bag.pk }}">
+                {{ vehicle_bag.name }}
+              </button>
+            </h2>
+          </div>
 
-    {% for vehicle_bag in vehicle_bags %}
-      <div class="card">
+          <div id="collapse{{ vehicle_bag.pk }}" class="collapse" aria-labelledby="heading{{ vehicle_bag.pk }}"
+               data-parent="#bags_accordion">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-3 col-sm-6">
 
-        <div class="card-header" id="heading{{ vehicle_bag.pk }}">
-          <h2 class="mb-0">
-            <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                    data-target="#collapse{{ vehicle_bag.pk }}" aria-expanded="true"
-                    aria-controls="collapse{{ vehicle_bag.pk }}">
-              {{ vehicle_bag.name }}
-            </button>
-          </h2>
-        </div>
-
-        <div id="collapse{{ vehicle_bag.pk }}" class="collapse" aria-labelledby="heading{{ vehicle_bag.pk }}"
-             data-parent="#bags_accordion">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-3 col-sm-6">
-
-                {% for bag_compartment in vehicle_bag.bagcompartment_set.all %}
-                  <div class="text-center mb-1" style="background-color:lightgrey;">
-                    {{ bag_compartment.name }}
-                  </div>
-
-                  {% for bag_compartment_to_item_association in bag_compartment.bagcompartmenttoitemassociation_set.all %}
-                    <div class="form-group row mb-0">
-                      <div class="col-sm-2">
-                        <input type="text" class="form-control form-control-sm"
-                               id="input{{ bag_compartment_to_item_association.item.pk }}" placeholder=""
-                               name="bagcompartmenttoitemassociation_{{ bag_compartment_to_item_association.pk }}">
-                      </div>
-
-                      {# TODO use extend for them item block below x3 #}
-                      <div class="col-sm-10 pl-0">
-                        <label for="input{{ bag_compartment_to_item_association.item.pk }}"
-                               class="col-form-label col-form-label">
-                          {{ bag_compartment_to_item_association.item.pk }}pk
-                          {{ bag_compartment_to_item_association.quantity }}x
-                          {{ bag_compartment_to_item_association.item.name }}
-                          {% if bag_compartment_to_item_association.item.size %},
-                            {{ bag_compartment_to_item_association.item.size }}
-                          {% endif %}
-                          {% if bag_compartment_to_item_association.item.notes %}
-                            ({{ bag_compartment_to_item_association.item.notes }})
-                          {% endif %}
-                          {% if bag_compartment_to_item_association.item.brand %}by
-                            {{ bag_compartment_to_item_association.item.brand }}
-                          {% endif %}
-                        </label>
-                      </div>
-                    </div>
-                  {% endfor %}
-
-                  {% for kit in bag_compartment.kit_set.all %}
-                    <div class="row pt-1">
-                      <div class="col-12 text-center">
-                        {{ kit.name }}
-                      </div>
+                  {% for bag_compartment in vehicle_bag.bagcompartment_set.all %}
+                    <div class="text-center mb-1" style="background-color:lightgrey;">
+                      {{ bag_compartment.name }}
                     </div>
 
-                    {% for kit_to_item_association in kit.kittoitemassociation_set.all %}
+                    {% for bag_compartment_to_item_association in bag_compartment.bagcompartmenttoitemassociation_set.all %}
                       <div class="form-group row mb-0">
                         <div class="col-sm-2">
                           <input type="text" class="form-control form-control-sm"
-                                 id="input{{ kit_to_item_association.item.pk }}" placeholder=""
-                                 name="kittoitemassociation_{{ kit_to_item_association.pk }}">
+                                 id="input{{ bag_compartment_to_item_association.item.pk }}" placeholder=""
+                                 name="bagcompartmenttoitemassociation_{{ bag_compartment_to_item_association.pk }}">
                         </div>
+
+                        {# TODO use extend for them item block below x3 #}
                         <div class="col-sm-10 pl-0">
-                          <label for="input{{ kit_to_item_association.item.pk }}"
+                          <label for="input{{ bag_compartment_to_item_association.item.pk }}"
                                  class="col-form-label col-form-label">
-                            {{ kit_to_item_association.item.pk }}pk
-                            {{ kit_to_item_association.quantity }}x {{ kit_to_item_association.item.name }}
-                            {% if kit_to_item_association.item.size %},
-                              {{ kit_to_item_association.item.size }}
+                            {{ bag_compartment_to_item_association.quantity }}x
+                            {{ bag_compartment_to_item_association.item.name }}
+                            {% if bag_compartment_to_item_association.item.size %},
+                              {{ bag_compartment_to_item_association.item.size }}
                             {% endif %}
-                            {% if kit_to_item_association.item.notes %}
-                              ({{ kit_to_item_association.item.notes }})
+                            {% if bag_compartment_to_item_association.item.notes %}
+                              ({{ bag_compartment_to_item_association.item.notes }})
                             {% endif %}
-                            {% if kit_to_item_association.item.brand %}by
-                              {{ kit_to_item_association.item.brand }}
+                            {% if bag_compartment_to_item_association.item.brand %}by
+                              {{ bag_compartment_to_item_association.item.brand }}
                             {% endif %}
                           </label>
                         </div>
                       </div>
                     {% endfor %}
 
-                    {% for kit_compartment in kit.kitcompartment_set.all %}
-                      <div class="row pt-3 mb-1">
-                        <div class="col-12 mt-n3 text-center text-secondary">
-                          {{ kit_compartment.name }}
+                    {% for kit in bag_compartment.kit_set.all %}
+                      <div class="row pt-1">
+                        <div class="col-12 text-center">
+                          {{ kit.name }}
                         </div>
                       </div>
 
-                      {% for kit_compartment_to_item_association in kit_compartment.kitcompartmenttoitemassociation_set.all %}
+                      {% for kit_to_item_association in kit.kittoitemassociation_set.all %}
                         <div class="form-group row mb-0">
                           <div class="col-sm-2">
                             <input type="text" class="form-control form-control-sm"
-                                   id="input{{ kit_compartment_to_item_association.item.pk }}" placeholder=""
-                                   name="kitcompartmenttoitemassociation_{{ kit_compartment_to_item_association.pk }}">
+                                   id="input{{ kit_to_item_association.item.pk }}" placeholder=""
+                                   name="kittoitemassociation_{{ kit_to_item_association.pk }}">
                           </div>
                           <div class="col-sm-10 pl-0">
-                            <label for="input{{ kit_compartment_to_item_association.item.pk }}"
+                            <label for="input{{ kit_to_item_association.item.pk }}"
                                    class="col-form-label col-form-label">
-                              {{ kit_compartment_to_item_association.item.pk }}pk
-                              {{ kit_compartment_to_item_association.quantity }}x
-                              {{ kit_compartment_to_item_association.item.name }}
-                              {% if kit_compartment_to_item_association.item.size %},
-                                {{ kit_compartment_to_item_association.item.size }}
+                              {{ kit_to_item_association.quantity }}x
+                              {{ kit_to_item_association.item.name }}
+                              {% if kit_to_item_association.item.size %},
+                                {{ kit_to_item_association.item.size }}
                               {% endif %}
-                              {% if kit_compartment_to_item_association.item.notes %}
-                                ({{ kit_compartment_to_item_association.item.notes }})
+                              {% if kit_to_item_association.item.notes %}
+                                ({{ kit_to_item_association.item.notes }})
                               {% endif %}
-                              {% if kit_compartment_to_item_association.item.brand %}by
-                                {{ kit_compartment_to_item_association.item.brand }}
+                              {% if kit_to_item_association.item.brand %}by
+                                {{ kit_to_item_association.item.brand }}
                               {% endif %}
                             </label>
                           </div>
                         </div>
                       {% endfor %}
 
-                      {% if kit_compartment.name in new_column_cutoffs %}
+                      {% for kit_compartment in kit.kitcompartment_set.all %}
+                        <div class="row pt-3 mb-1">
+                          <div class="col-12 mt-n3 text-center text-secondary">
+                            {{ kit_compartment.name }}
+                          </div>
                         </div>
-                        <div class="col-md-3 col-sm-6">
-                      {% endif %}
 
-                    {% endfor %}  <!-- /kit>kit_compartment -->
-                  {% endfor %}  <!-- /kit -->
+                        {% for kit_compartment_to_item_association in kit_compartment.kitcompartmenttoitemassociation_set.all %}
+                          <div class="form-group row mb-0">
+                            <div class="col-sm-2">
+                              <input type="text" class="form-control form-control-sm"
+                                     id="input{{ kit_compartment_to_item_association.item.pk }}" placeholder=""
+                                     name="kitcompartmenttoitemassociation_{{ kit_compartment_to_item_association.pk }}">
+                            </div>
+                            <div class="col-sm-10 pl-0">
+                              <label for="input{{ kit_compartment_to_item_association.item.pk }}"
+                                     class="col-form-label col-form-label">
+                                {{ kit_compartment_to_item_association.quantity }}x
+                                {{ kit_compartment_to_item_association.item.name }}
+                                {% if kit_compartment_to_item_association.item.size %},
+                                  {{ kit_compartment_to_item_association.item.size }}
+                                {% endif %}
+                                {% if kit_compartment_to_item_association.item.notes %}
+                                  ({{ kit_compartment_to_item_association.item.notes }})
+                                {% endif %}
+                                {% if kit_compartment_to_item_association.item.brand %}by
+                                  {{ kit_compartment_to_item_association.item.brand }}
+                                {% endif %}
+                              </label>
+                            </div>
+                          </div>
+                        {% endfor %}
 
-                {% if bag_compartment.name in new_column_cutoffs %}
-                  </div>
-                  <div class="col-md-3 col-sm-6">
-                {% endif %}
+                        {% if kit_compartment.name in new_column_cutoffs %}
+                          </div>
+                          <div class="col-md-3 col-sm-6">
+                        {% endif %}
 
-                {% endfor %} <!-- /bag_compartment -->
-                </div>  {# /col #}
-            </div>  {# /row #}
-          </div>  {# card-body #}
-        </div>  {# collapse #}
+                      {% endfor %}  <!-- /kit>kit_compartment -->
+                    {% endfor %}  <!-- /kit -->
 
-      </div> {# /card #}
+                  {% if bag_compartment.name in new_column_cutoffs %}
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                  {% endif %}
 
-    {% endfor %}  {# /bag in bags #}
-  </div> {# /accordion #}
+                  {% endfor %} <!-- /bag_compartment -->
+                  </div>  {# /col #}
+              </div>  {# /row #}
+            </div>  {# card-body #}
+          </div>  {# collapse #}
 
-  <div class="row mt-2 justify-content-center">
-    <div class="col-md-2">
-      <button type="submit" class="btn btn-primary btn-block">Order</button>
+        </div> {# /card #}
+
+      {% endfor %}  {# /vehicle_bag in vehicle_bags #}
+
+    </div> {# /accordion #}
+
+    <div class="row mt-2 justify-content-center">
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary btn-block">Order</button>
+      </div>
     </div>
-  </div>
 
-</form>
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous">
-</script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous">
-</script>
-</body>
-</html>
+  </form>
+{% endblock %}
