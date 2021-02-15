@@ -2,11 +2,11 @@
 
   <ol class="breadcrumb">
     {% for breadcrumb in breadcrumbs %}
-      <li class="breadcrumb-item my-auto
-        {% if breadcrumb.2 == 'active' %}active" aria-current="page">{{ breadcrumb.0 }}
-        {% else %}"><a href={{ breadcrumb.1 }}>{{ breadcrumb.0 }}</a>
-        {% endif %}
-      </li>
+      {% if breadcrumb.2 == 'active' %}
+        <li class="breadcrumb-item my-auto active" aria-current="page">{{ breadcrumb.0 }}</li>
+      {% else %}
+        <li class="breadcrumb-item my-auto"><a href={{ breadcrumb.1 }}>{{ breadcrumb.0 }}</a></li>
+      {% endif %}
     {% endfor %}
     <li class="ml-auto my-auto small">welcome, {{ user }}</li>
     <a href="{% url "user sign out" %}"
