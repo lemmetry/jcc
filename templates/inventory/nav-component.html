@@ -2,7 +2,7 @@
 
   <ol class="breadcrumb">
     {% for breadcrumb in breadcrumbs %}
-      {% if breadcrumb.2 == 'active' %}
+      {% if forloop.last %}
         <li class="breadcrumb-item my-auto active" aria-current="page">{{ breadcrumb.0 }}</li>
       {% else %}
         <li class="breadcrumb-item my-auto"><a href={{ breadcrumb.1 }}>{{ breadcrumb.0 }}</a></li>

@@ -30,10 +30,9 @@ def home(request):
     user = request.user
 
     breadcrumb_home_title = 'Home'
-    breadcrumb_home_url = reverse(home)
 
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url, 'active']
+        [breadcrumb_home_title, '']
     ]
 
     template = 'home.html'

@@ -36,13 +36,10 @@ def station_orders_dashboard(request, station_id):
     breadcrumb_home_url = reverse(home)
 
     breadcrumb_station_title = station_name
-    breadcrumb_station_url = reverse(station_orders_dashboard,
-                                     kwargs={'station_id': station_id}
-                                     )
 
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url, ''],
-        [breadcrumb_station_title, breadcrumb_station_url, 'active']
+        [breadcrumb_home_title, breadcrumb_home_url],
+        [breadcrumb_station_title, '']
     ]
 
     template = 'station_orders_dashboard.html'
@@ -73,14 +70,11 @@ def make_station_order(request, station_id, order_pk):
                                      )
 
     breadcrumb_order_title = 'Order #%s' % order_pk
-    breadcrumb_order_url = reverse(make_station_order,
-                                   kwargs={'station_id': station_id,
-                                           'order_pk': order_pk}
-                                   )
+
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url, ''],
-        [breadcrumb_station_title, breadcrumb_station_url, ''],
-        [breadcrumb_order_title, breadcrumb_order_url, 'active']
+        [breadcrumb_home_title, breadcrumb_home_url],
+        [breadcrumb_station_title, breadcrumb_station_url],
+        [breadcrumb_order_title, '']
     ]
 
     template = 'make_station_order.html'
@@ -173,10 +167,10 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
         breadcrumb_vehicle_title = vehicle_name
 
         breadcrumbs = [
-            [breadcrumb_home_title, breadcrumb_home_url, ''],
-            [breadcrumb_station_title, breadcrumb_station_url, ''],
-            [breadcrumb_order_title, breadcrumb_order_url, ''],
-            [breadcrumb_vehicle_title, '', 'active']
+            [breadcrumb_home_title, breadcrumb_home_url],
+            [breadcrumb_station_title, breadcrumb_station_url],
+            [breadcrumb_order_title, breadcrumb_order_url],
+            [breadcrumb_vehicle_title, '']
         ]
 
         template = 'make_vehicle_order.html'
@@ -244,15 +238,11 @@ def station_order_confirmation(request, station_id, order_pk):
                                      )
 
     breadcrumb_order_title = 'Order #%s' % order_pk
-    breadcrumb_order_url = reverse(make_station_order,
-                                   kwargs={'station_id': station_id,
-                                           'order_pk': order_pk}
-                                   )
 
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url, ''],
-        [breadcrumb_station_title, breadcrumb_station_url, ''],
-        [breadcrumb_order_title, breadcrumb_order_url, 'active']
+        [breadcrumb_home_title, breadcrumb_home_url],
+        [breadcrumb_station_title, breadcrumb_station_url],
+        [breadcrumb_order_title, '']
     ]
 
     template = 'station_order_confirmation.html'
@@ -286,15 +276,11 @@ def station_order_summary(request, station_id, order_pk):
                                      )
 
     breadcrumb_order_title = 'Order #%s' % order_pk
-    breadcrumb_order_url = reverse(make_station_order,
-                                   kwargs={'station_id': station_id,
-                                           'order_pk': order_pk}
-                                   )
 
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url, ''],
-        [breadcrumb_station_title, breadcrumb_station_url, ''],
-        [breadcrumb_order_title, breadcrumb_order_url, 'active']
+        [breadcrumb_home_title, breadcrumb_home_url],
+        [breadcrumb_station_title, breadcrumb_station_url],
+        [breadcrumb_order_title, '']
     ]
 
     template = 'station_order_summary.html'
