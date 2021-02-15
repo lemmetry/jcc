@@ -5,8 +5,8 @@
 {% block content %}
 
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb my-auto">
-      <li class="breadcrumb-item active my-auto" aria-current="page">Home</li>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item my-auto active" aria-current="page">Home</li>
       <li class="ml-auto my-auto small">welcome, {{ user }}</li>
       <a href="{% url "user sign out" %}"
          class="btn btn-outline-primary btn-sm ml-2"
