@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from .models import Station
 
 
@@ -28,10 +29,18 @@ def home(request):
     stations = Station.objects.all()
     user = request.user
 
+    breadcrumb_home_title = 'Home'
+    breadcrumb_home_url = reverse(home)
+
+    breadcrumbs = [
+        [breadcrumb_home_title, breadcrumb_home_url, 'active']
+    ]
+
     template = 'home.html'
     context = {
         'stations': stations,
         'user': user,
+        'breadcrumbs': breadcrumbs
     }
 
     return render(request, template, context)

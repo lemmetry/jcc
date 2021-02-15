@@ -2,20 +2,11 @@
 
 {% block title %}{{ vehicle_name }}{% endblock %}
 
+{% block nav-component %}
+  {% include "nav-component.html" %}
+{% endblock %}
+
 {% block content %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item my-auto"><a href="{% url 'home' %}">Home</a></li>
-      <li class="breadcrumb-item my-auto"><a href="{% url 'station orders dashboard' station_id=station_id %}">{{ station_name }}</a></li>
-      <li class="breadcrumb-item my-auto"><a href="{% url 'make station order' station_id=station_id order_pk=order_pk %}">Order #{{ order_pk }}</a></li>
-      <li class="breadcrumb-item my-auto active" aria-current="page">{{ vehicle_name }}</li>
-      <li class="ml-auto my-auto small">welcome, {{ user }}</li>
-      <a href="{% url "user sign out" %}"
-         class="btn btn-outline-primary btn-sm ml-2"
-         role="button">sign out
-      </a>
-    </ol>
-  </nav>
 
   <form method="post">
     {% csrf_token %}

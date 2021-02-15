@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from jcc.settings.base import JCC_EMAIL_TO, JCC_EMAIL_FROM
 
+from fleet.views import home
 from fleet.models import Station
 from fleet.models import Vehicle
 from inventory.models import BagCompartmentToItemAssociation
@@ -30,11 +32,25 @@ def station_orders_dashboard(request, station_id):
         if last_five_station_orders:
             last_five_station_orders = reversed(last_five_station_orders)
 
+    breadcrumb_home_title = 'Home'
+    breadcrumb_home_url = reverse(home)
+
+    breadcrumb_station_title = station_name
+    breadcrumb_station_url = reverse(station_orders_dashboard,
+                                     kwargs={'station_id': station_id}
+                                     )
+
+    breadcrumbs = [
+        [breadcrumb_home_title, breadcrumb_home_url, ''],
+        [breadcrumb_station_title, breadcrumb_station_url, 'active']
+    ]
+
     template = 'station_orders_dashboard.html'
     context = {
         'station_id': station_id,
         'station_name': station_name,
-        'last_five_station_orders': last_five_station_orders
+        'last_five_station_orders': last_five_station_orders,
+        'breadcrumbs': breadcrumbs
     }
     return render(request, template, context)
 
@@ -48,6 +64,25 @@ def make_station_order(request, station_id, order_pk):
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
+    breadcrumb_home_title = 'Home'
+    breadcrumb_home_url = reverse(home)
+
+    breadcrumb_station_title = station_name
+    breadcrumb_station_url = reverse(station_orders_dashboard,
+                                     kwargs={'station_id': station_id}
+                                     )
+
+    breadcrumb_order_title = 'Order #%s' % order_pk
+    breadcrumb_order_url = reverse(make_station_order,
+                                   kwargs={'station_id': station_id,
+                                           'order_pk': order_pk}
+                                   )
+    breadcrumbs = [
+        [breadcrumb_home_title, breadcrumb_home_url, ''],
+        [breadcrumb_station_title, breadcrumb_station_url, ''],
+        [breadcrumb_order_title, breadcrumb_order_url, 'active']
+    ]
+
     template = 'make_station_order.html'
     context = {
         'station_id': station_id,
@@ -55,6 +90,7 @@ def make_station_order(request, station_id, order_pk):
         'station_name': station_name,
         'station_fleet': station_fleet,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
+        'breadcrumbs': breadcrumbs
     }
     return render(request, template, context)
 
@@ -119,6 +155,30 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
 
         return redirect('make station order', station_id, order_pk)
     else:
+
+        breadcrumb_home_title = 'Home'
+        breadcrumb_home_url = reverse(home)
+
+        breadcrumb_station_title = station_name
+        breadcrumb_station_url = reverse(station_orders_dashboard,
+                                         kwargs={'station_id': station_id}
+                                         )
+
+        breadcrumb_order_title = 'Order #%s' % order_pk
+        breadcrumb_order_url = reverse(make_station_order,
+                                       kwargs={'station_id': station_id,
+                                               'order_pk': order_pk}
+                                       )
+
+        breadcrumb_vehicle_title = vehicle_name
+
+        breadcrumbs = [
+            [breadcrumb_home_title, breadcrumb_home_url, ''],
+            [breadcrumb_station_title, breadcrumb_station_url, ''],
+            [breadcrumb_order_title, breadcrumb_order_url, ''],
+            [breadcrumb_vehicle_title, '', 'active']
+        ]
+
         template = 'make_vehicle_order.html'
         new_column_cutoffs = ['ETT Side',
                               'Under Syringes',
@@ -132,7 +192,8 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
             'station_name': station_name,
             'vehicle_name': vehicle_name,
             'vehicle_bags': vehicle_bags,
-            'new_column_cutoffs': new_column_cutoffs
+            'new_column_cutoffs': new_column_cutoffs,
+            'breadcrumbs': breadcrumbs
         }
 
     return render(request, template, context)
@@ -174,13 +235,34 @@ def station_order_confirmation(request, station_id, order_pk):
 
         return redirect('station order summary', station_id, order_pk)
 
+    breadcrumb_home_title = 'Home'
+    breadcrumb_home_url = reverse(home)
+
+    breadcrumb_station_title = station_name
+    breadcrumb_station_url = reverse(station_orders_dashboard,
+                                     kwargs={'station_id': station_id}
+                                     )
+
+    breadcrumb_order_title = 'Order #%s' % order_pk
+    breadcrumb_order_url = reverse(make_station_order,
+                                   kwargs={'station_id': station_id,
+                                           'order_pk': order_pk}
+                                   )
+
+    breadcrumbs = [
+        [breadcrumb_home_title, breadcrumb_home_url, ''],
+        [breadcrumb_station_title, breadcrumb_station_url, ''],
+        [breadcrumb_order_title, breadcrumb_order_url, 'active']
+    ]
+
     template = 'station_order_confirmation.html'
     context = {
         'station_id': station_id,
         'order_pk': order_pk,
         'station_name': station_name,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
-        'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location
+        'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location,
+        'breadcrumbs': breadcrumbs
     }
     return render(request, template, context)
 
@@ -195,6 +277,26 @@ def station_order_summary(request, station_id, order_pk):
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
+    breadcrumb_home_title = 'Home'
+    breadcrumb_home_url = reverse(home)
+
+    breadcrumb_station_title = station_name
+    breadcrumb_station_url = reverse(station_orders_dashboard,
+                                     kwargs={'station_id': station_id}
+                                     )
+
+    breadcrumb_order_title = 'Order #%s' % order_pk
+    breadcrumb_order_url = reverse(make_station_order,
+                                   kwargs={'station_id': station_id,
+                                           'order_pk': order_pk}
+                                   )
+
+    breadcrumbs = [
+        [breadcrumb_home_title, breadcrumb_home_url, ''],
+        [breadcrumb_station_title, breadcrumb_station_url, ''],
+        [breadcrumb_order_title, breadcrumb_order_url, 'active']
+    ]
+
     template = 'station_order_summary.html'
     context = {
         'station_id': station_id,
@@ -202,6 +304,7 @@ def station_order_summary(request, station_id, order_pk):
         'station_name': station_name,
         'station_order_timestamp': station_order_timestamp,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
-        'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location
+        'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location,
+        'breadcrumbs': breadcrumbs
     }
     return render(request, template, context)
