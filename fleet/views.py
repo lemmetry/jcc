@@ -29,10 +29,8 @@ def home(request):
     stations = Station.objects.all()
     user = request.user
 
-    breadcrumb_home_title = 'Home'
-
     breadcrumbs = [
-        [breadcrumb_home_title, '']
+        ['Home', '']
     ]
 
     template = 'home.html'

@@ -32,14 +32,9 @@ def station_orders_dashboard(request, station_id):
         if last_five_station_orders:
             last_five_station_orders = reversed(last_five_station_orders)
 
-    breadcrumb_home_title = 'Home'
-    breadcrumb_home_url = reverse(home)
-
-    breadcrumb_station_title = station_name
-
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url],
-        [breadcrumb_station_title, '']
+        ['Home', reverse(home)],
+        [station_name, '']
     ]
 
     template = 'station_orders_dashboard.html'
@@ -61,20 +56,13 @@ def make_station_order(request, station_id, order_pk):
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
-    breadcrumb_home_title = 'Home'
-    breadcrumb_home_url = reverse(home)
-
-    breadcrumb_station_title = station_name
     breadcrumb_station_url = reverse(station_orders_dashboard,
                                      kwargs={'station_id': station_id}
                                      )
-
-    breadcrumb_order_title = 'Order #%s' % order_pk
-
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url],
-        [breadcrumb_station_title, breadcrumb_station_url],
-        [breadcrumb_order_title, '']
+        ['Home', reverse(home)],
+        [station_name, breadcrumb_station_url],
+        ['Order #%s' % order_pk, '']
     ]
 
     template = 'make_station_order.html'
@@ -150,27 +138,18 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
         return redirect('make station order', station_id, order_pk)
     else:
 
-        breadcrumb_home_title = 'Home'
-        breadcrumb_home_url = reverse(home)
-
-        breadcrumb_station_title = station_name
         breadcrumb_station_url = reverse(station_orders_dashboard,
                                          kwargs={'station_id': station_id}
                                          )
-
-        breadcrumb_order_title = 'Order #%s' % order_pk
         breadcrumb_order_url = reverse(make_station_order,
                                        kwargs={'station_id': station_id,
                                                'order_pk': order_pk}
                                        )
-
-        breadcrumb_vehicle_title = vehicle_name
-
         breadcrumbs = [
-            [breadcrumb_home_title, breadcrumb_home_url],
-            [breadcrumb_station_title, breadcrumb_station_url],
-            [breadcrumb_order_title, breadcrumb_order_url],
-            [breadcrumb_vehicle_title, '']
+            ['Home', reverse(home)],
+            [station_name, breadcrumb_station_url],
+            ['Order #%s' % order_pk, breadcrumb_order_url],
+            [vehicle_name, '']
         ]
 
         template = 'make_vehicle_order.html'
@@ -229,20 +208,13 @@ def station_order_confirmation(request, station_id, order_pk):
 
         return redirect('station order summary', station_id, order_pk)
 
-    breadcrumb_home_title = 'Home'
-    breadcrumb_home_url = reverse(home)
-
-    breadcrumb_station_title = station_name
     breadcrumb_station_url = reverse(station_orders_dashboard,
                                      kwargs={'station_id': station_id}
                                      )
-
-    breadcrumb_order_title = 'Order #%s' % order_pk
-
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url],
-        [breadcrumb_station_title, breadcrumb_station_url],
-        [breadcrumb_order_title, '']
+        ['Home', reverse(home)],
+        [station_name, breadcrumb_station_url],
+        ['Order #%s' % order_pk, '']
     ]
 
     template = 'station_order_confirmation.html'
@@ -267,20 +239,13 @@ def station_order_summary(request, station_id, order_pk):
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
-    breadcrumb_home_title = 'Home'
-    breadcrumb_home_url = reverse(home)
-
-    breadcrumb_station_title = station_name
     breadcrumb_station_url = reverse(station_orders_dashboard,
                                      kwargs={'station_id': station_id}
                                      )
-
-    breadcrumb_order_title = 'Order #%s' % order_pk
-
     breadcrumbs = [
-        [breadcrumb_home_title, breadcrumb_home_url],
-        [breadcrumb_station_title, breadcrumb_station_url],
-        [breadcrumb_order_title, '']
+        ['Home', reverse(home)],
+        [station_name, breadcrumb_station_url],
+        ['Order #%s' % order_pk, '']
     ]
 
     template = 'station_order_summary.html'
