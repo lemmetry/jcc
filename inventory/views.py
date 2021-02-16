@@ -1,12 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from jcc.settings.base import JCC_EMAIL_TO, JCC_EMAIL_FROM
 
-from fleet.views import home
 from fleet.models import Station
 from fleet.models import Vehicle
 from inventory.models import BagCompartmentToItemAssociation
@@ -15,6 +13,7 @@ from inventory.models import KitCompartmentToItemAssociation
 from inventory.models import VehicleOrder
 from inventory.models import VehicleOrderToItemAssociation
 from inventory.models import StationOrder
+from jcc import make_breadcrumbs
 
 
 @login_required
@@ -33,8 +32,8 @@ def station_orders_dashboard(request, station_id):
             last_five_station_orders = reversed(last_five_station_orders)
 
     breadcrumbs = [
-        ['Home', reverse(home)],
-        [station_name, '']
+        make_breadcrumbs.make_home_breadcrumb(),
+        make_breadcrumbs.make_station_breadcrumb(station)
     ]
 
     template = 'station_orders_dashboard.html'
@@ -56,13 +55,10 @@ def make_station_order(request, station_id, order_pk):
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
-    breadcrumb_station_url = reverse(station_orders_dashboard,
-                                     kwargs={'station_id': station_id}
-                                     )
     breadcrumbs = [
-        ['Home', reverse(home)],
-        [station_name, breadcrumb_station_url],
-        ['Order #%s' % order_pk, '']
+        make_breadcrumbs.make_home_breadcrumb(),
+        make_breadcrumbs.make_station_breadcrumb(station),
+        make_breadcrumbs.make_order_breadcrumbs(station_order)
     ]
 
     template = 'make_station_order.html'
@@ -138,18 +134,11 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
         return redirect('make station order', station_id, order_pk)
     else:
 
-        breadcrumb_station_url = reverse(station_orders_dashboard,
-                                         kwargs={'station_id': station_id}
-                                         )
-        breadcrumb_order_url = reverse(make_station_order,
-                                       kwargs={'station_id': station_id,
-                                               'order_pk': order_pk}
-                                       )
         breadcrumbs = [
-            ['Home', reverse(home)],
-            [station_name, breadcrumb_station_url],
-            ['Order #%s' % order_pk, breadcrumb_order_url],
-            [vehicle_name, '']
+            make_breadcrumbs.make_home_breadcrumb(),
+            make_breadcrumbs.make_station_breadcrumb(station),
+            make_breadcrumbs.make_order_breadcrumbs(station_order),
+            make_breadcrumbs.make_vehicle_breadcrumb(vehicle)
         ]
 
         template = 'make_vehicle_order.html'
@@ -208,13 +197,10 @@ def station_order_confirmation(request, station_id, order_pk):
 
         return redirect('station order summary', station_id, order_pk)
 
-    breadcrumb_station_url = reverse(station_orders_dashboard,
-                                     kwargs={'station_id': station_id}
-                                     )
     breadcrumbs = [
-        ['Home', reverse(home)],
-        [station_name, breadcrumb_station_url],
-        ['Order #%s' % order_pk, '']
+        make_breadcrumbs.make_home_breadcrumb(),
+        make_breadcrumbs.make_station_breadcrumb(station),
+        make_breadcrumbs.make_order_breadcrumbs(station_order)
     ]
 
     template = 'station_order_confirmation.html'
@@ -239,13 +225,10 @@ def station_order_summary(request, station_id, order_pk):
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
-    breadcrumb_station_url = reverse(station_orders_dashboard,
-                                     kwargs={'station_id': station_id}
-                                     )
     breadcrumbs = [
-        ['Home', reverse(home)],
-        [station_name, breadcrumb_station_url],
-        ['Order #%s' % order_pk, '']
+        make_breadcrumbs.make_home_breadcrumb(),
+        make_breadcrumbs.make_station_breadcrumb(station),
+        make_breadcrumbs.make_order_breadcrumbs(station_order)
     ]
 
     template = 'station_order_summary.html'

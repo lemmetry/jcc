@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from .models import Station
+from jcc import make_breadcrumbs
 
 
 def user_sign_in(request):
@@ -30,7 +30,7 @@ def home(request):
     user = request.user
 
     breadcrumbs = [
-        ['Home', '']
+        make_breadcrumbs.make_home_breadcrumb()
     ]
 
     template = 'home.html'
