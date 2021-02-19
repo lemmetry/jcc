@@ -7,13 +7,17 @@ from jcc.settings.base import JCC_EMAIL_TO, JCC_EMAIL_FROM
 
 from fleet.models import Station
 from fleet.models import Vehicle
+from fleet.views import home
 from inventory.models import BagCompartmentToItemAssociation
 from inventory.models import KitToItemAssociation
 from inventory.models import KitCompartmentToItemAssociation
 from inventory.models import VehicleOrder
 from inventory.models import VehicleOrderToItemAssociation
 from inventory.models import StationOrder
-from jcc import make_breadcrumbs
+from jcc.make_breadcrumbs import make_home_breadcrumb_maker
+from jcc.make_breadcrumbs import make_station_breadcrumb_maker
+from jcc.make_breadcrumbs import make_order_breadcrumb_maker
+from jcc.make_breadcrumbs import make_vehicle_breadcrumb_maker
 
 
 @login_required
@@ -31,9 +35,12 @@ def station_orders_dashboard(request, station_id):
         if last_five_station_orders:
             last_five_station_orders = reversed(last_five_station_orders)
 
+    make_home_breadcrumb = make_home_breadcrumb_maker(home)
+    make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
+
     breadcrumbs = [
-        make_breadcrumbs.make_home_breadcrumb(),
-        make_breadcrumbs.make_station_breadcrumb(station)
+        make_home_breadcrumb(),
+        make_station_breadcrumb(station)
     ]
 
     template = 'station_orders_dashboard.html'
@@ -55,10 +62,14 @@ def make_station_order(request, station_id, order_pk):
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
+    make_home_breadcrumb = make_home_breadcrumb_maker(home)
+    make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
+    make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
+
     breadcrumbs = [
-        make_breadcrumbs.make_home_breadcrumb(),
-        make_breadcrumbs.make_station_breadcrumb(station),
-        make_breadcrumbs.make_order_breadcrumbs(station_order)
+        make_home_breadcrumb(),
+        make_station_breadcrumb(station),
+        make_order_breadcrumb(station_order)
     ]
 
     template = 'make_station_order.html'
@@ -134,11 +145,16 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
         return redirect('make station order', station_id, order_pk)
     else:
 
+        make_home_breadcrumb = make_home_breadcrumb_maker(home)
+        make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
+        make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
+        make_vehicle_order_breadcrumb = make_vehicle_breadcrumb_maker()
+
         breadcrumbs = [
-            make_breadcrumbs.make_home_breadcrumb(),
-            make_breadcrumbs.make_station_breadcrumb(station),
-            make_breadcrumbs.make_order_breadcrumbs(station_order),
-            make_breadcrumbs.make_vehicle_breadcrumb(vehicle)
+            make_home_breadcrumb(),
+            make_station_breadcrumb(station),
+            make_order_breadcrumb(station_order),
+            make_vehicle_order_breadcrumb(vehicle)
         ]
 
         template = 'make_vehicle_order.html'
@@ -197,10 +213,14 @@ def station_order_confirmation(request, station_id, order_pk):
 
         return redirect('station order summary', station_id, order_pk)
 
+    make_home_breadcrumb = make_home_breadcrumb_maker(home)
+    make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
+    make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
+
     breadcrumbs = [
-        make_breadcrumbs.make_home_breadcrumb(),
-        make_breadcrumbs.make_station_breadcrumb(station),
-        make_breadcrumbs.make_order_breadcrumbs(station_order)
+        make_home_breadcrumb(),
+        make_station_breadcrumb(station),
+        make_order_breadcrumb(station_order)
     ]
 
     template = 'station_order_confirmation.html'
@@ -225,10 +245,14 @@ def station_order_summary(request, station_id, order_pk):
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
+    make_home_breadcrumb = make_home_breadcrumb_maker(home)
+    make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
+    make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
+
     breadcrumbs = [
-        make_breadcrumbs.make_home_breadcrumb(),
-        make_breadcrumbs.make_station_breadcrumb(station),
-        make_breadcrumbs.make_order_breadcrumbs(station_order)
+        make_home_breadcrumb(),
+        make_station_breadcrumb(station),
+        make_order_breadcrumb(station_order)
     ]
 
     template = 'station_order_summary.html'
