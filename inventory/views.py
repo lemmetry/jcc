@@ -35,9 +35,6 @@ def station_orders_dashboard(request, station_id):
         if last_five_station_orders:
             last_five_station_orders = reversed(last_five_station_orders)
 
-    make_home_breadcrumb = make_home_breadcrumb_maker(home)
-    make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
-
     breadcrumbs = [
         make_home_breadcrumb(),
         make_station_breadcrumb(station)
@@ -61,10 +58,6 @@ def make_station_order(request, station_id, order_pk):
     station_order = StationOrder.objects.get(pk=order_pk)
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
-
-    make_home_breadcrumb = make_home_breadcrumb_maker(home)
-    make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
-    make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
 
     breadcrumbs = [
         make_home_breadcrumb(),
@@ -145,11 +138,6 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
         return redirect('make station order', station_id, order_pk)
     else:
 
-        make_home_breadcrumb = make_home_breadcrumb_maker(home)
-        make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
-        make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
-        make_vehicle_order_breadcrumb = make_vehicle_breadcrumb_maker()
-
         breadcrumbs = [
             make_home_breadcrumb(),
             make_station_breadcrumb(station),
@@ -213,10 +201,6 @@ def station_order_confirmation(request, station_id, order_pk):
 
         return redirect('station order summary', station_id, order_pk)
 
-    make_home_breadcrumb = make_home_breadcrumb_maker(home)
-    make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
-    make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
-
     breadcrumbs = [
         make_home_breadcrumb(),
         make_station_breadcrumb(station),
@@ -245,10 +229,6 @@ def station_order_summary(request, station_id, order_pk):
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
-    make_home_breadcrumb = make_home_breadcrumb_maker(home)
-    make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
-    make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
-
     breadcrumbs = [
         make_home_breadcrumb(),
         make_station_breadcrumb(station),
@@ -266,3 +246,9 @@ def station_order_summary(request, station_id, order_pk):
         'breadcrumbs': breadcrumbs
     }
     return render(request, template, context)
+
+
+make_home_breadcrumb = make_home_breadcrumb_maker(home)
+make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
+make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
+make_vehicle_order_breadcrumb = make_vehicle_breadcrumb_maker()
