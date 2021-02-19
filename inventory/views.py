@@ -1,23 +1,16 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.utils import timezone
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from jcc.settings.base import JCC_EMAIL_TO, JCC_EMAIL_FROM
+from datetime import timezone
 
-from fleet.models import Station
-from fleet.models import Vehicle
-from fleet.views import home
-from inventory.models import BagCompartmentToItemAssociation
-from inventory.models import KitToItemAssociation
-from inventory.models import KitCompartmentToItemAssociation
-from inventory.models import VehicleOrder
-from inventory.models import VehicleOrderToItemAssociation
-from inventory.models import StationOrder
-from jcc.make_breadcrumbs import make_home_breadcrumb_maker
-from jcc.make_breadcrumbs import make_station_breadcrumb_maker
-from jcc.make_breadcrumbs import make_order_breadcrumb_maker
-from jcc.make_breadcrumbs import make_vehicle_breadcrumb_maker
+from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
+
+from fleet.models import Station, Vehicle
+from inventory.models import StationOrder, VehicleOrder, BagCompartmentToItemAssociation, KitToItemAssociation, \
+    KitCompartmentToItemAssociation, VehicleOrderToItemAssociation
+from jcc.make_breadcrumbs import make_home_breadcrumb, make_station_breadcrumb, make_order_breadcrumb, \
+    make_vehicle_breadcrumb
+from jcc.settings.base import JCC_EMAIL_FROM, JCC_EMAIL_TO
 
 
 @login_required
@@ -36,8 +29,8 @@ def station_orders_dashboard(request, station_id):
             last_five_station_orders = reversed(last_five_station_orders)
 
     breadcrumbs = [
-        make_home_breadcrumb(),
-        make_station_breadcrumb(station)
+        make_home_breadcrumb('home'),
+        make_station_breadcrumb('station orders dashboard', station)
     ]
 
     template = 'station_orders_dashboard.html'
@@ -60,9 +53,9 @@ def make_station_order(request, station_id, order_pk):
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
     breadcrumbs = [
-        make_home_breadcrumb(),
-        make_station_breadcrumb(station),
-        make_order_breadcrumb(station_order)
+        make_home_breadcrumb('home'),
+        make_station_breadcrumb('station orders dashboard', station),
+        make_order_breadcrumb('make station order', station_order)
     ]
 
     template = 'make_station_order.html'
@@ -139,10 +132,10 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     else:
 
         breadcrumbs = [
-            make_home_breadcrumb(),
-            make_station_breadcrumb(station),
-            make_order_breadcrumb(station_order),
-            make_vehicle_order_breadcrumb(vehicle)
+            make_home_breadcrumb('home'),
+            make_station_breadcrumb('station orders dashboard', station),
+            make_order_breadcrumb('make station order', station_order),
+            make_vehicle_breadcrumb(vehicle)
         ]
 
         template = 'make_vehicle_order.html'
@@ -202,9 +195,9 @@ def station_order_confirmation(request, station_id, order_pk):
         return redirect('station order summary', station_id, order_pk)
 
     breadcrumbs = [
-        make_home_breadcrumb(),
-        make_station_breadcrumb(station),
-        make_order_breadcrumb(station_order)
+        make_home_breadcrumb('home'),
+        make_station_breadcrumb('station orders dashboard', station),
+        make_order_breadcrumb('make station order', station_order)
     ]
 
     template = 'station_order_confirmation.html'
@@ -230,9 +223,9 @@ def station_order_summary(request, station_id, order_pk):
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
     breadcrumbs = [
-        make_home_breadcrumb(),
-        make_station_breadcrumb(station),
-        make_order_breadcrumb(station_order)
+        make_home_breadcrumb('home'),
+        make_station_breadcrumb('station orders dashboard', station),
+        make_order_breadcrumb('make station order', station_order)
     ]
 
     template = 'station_order_summary.html'
@@ -246,9 +239,3 @@ def station_order_summary(request, station_id, order_pk):
         'breadcrumbs': breadcrumbs
     }
     return render(request, template, context)
-
-
-make_home_breadcrumb = make_home_breadcrumb_maker(home)
-make_station_breadcrumb = make_station_breadcrumb_maker(station_orders_dashboard)
-make_order_breadcrumb = make_order_breadcrumb_maker(make_station_order)
-make_vehicle_order_breadcrumb = make_vehicle_breadcrumb_maker()

@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Station
-from jcc.make_breadcrumbs import make_home_breadcrumb_maker
+from django.shortcuts import redirect, render
+
+from fleet.models import Station
+from jcc.make_breadcrumbs import make_home_breadcrumb
 
 
 def user_sign_in(request):
@@ -29,10 +30,8 @@ def home(request):
     stations = Station.objects.all()
     user = request.user
 
-    make_home_breadcrumb = make_home_breadcrumb_maker(home)
-
     breadcrumbs = [
-        make_home_breadcrumb()
+        make_home_breadcrumb('home')
     ]
 
     template = 'home.html'
