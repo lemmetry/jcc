@@ -31,7 +31,7 @@ def home(request):
     user = request.user
 
     breadcrumbs = [
-        make_home_breadcrumb('home')
+        make_home_breadcrumb()
     ]
 
     template = 'home.html'

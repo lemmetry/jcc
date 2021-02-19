@@ -29,8 +29,8 @@ def station_orders_dashboard(request, station_id):
             last_five_station_orders = reversed(last_five_station_orders)
 
     breadcrumbs = [
-        make_home_breadcrumb('home'),
-        make_station_breadcrumb('station orders dashboard', station)
+        make_home_breadcrumb(),
+        make_station_breadcrumb(station)
     ]
 
     template = 'station_orders_dashboard.html'
@@ -53,9 +53,9 @@ def make_station_order(request, station_id, order_pk):
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
     breadcrumbs = [
-        make_home_breadcrumb('home'),
-        make_station_breadcrumb('station orders dashboard', station),
-        make_order_breadcrumb('make station order', station_order)
+        make_home_breadcrumb(),
+        make_station_breadcrumb(station),
+        make_order_breadcrumb(station_order)
     ]
 
     template = 'make_station_order.html'
@@ -132,9 +132,9 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
     else:
 
         breadcrumbs = [
-            make_home_breadcrumb('home'),
-            make_station_breadcrumb('station orders dashboard', station),
-            make_order_breadcrumb('make station order', station_order),
+            make_home_breadcrumb(),
+            make_station_breadcrumb(station),
+            make_order_breadcrumb(station_order),
             make_vehicle_breadcrumb(vehicle)
         ]
 
@@ -195,9 +195,9 @@ def station_order_confirmation(request, station_id, order_pk):
         return redirect('station order summary', station_id, order_pk)
 
     breadcrumbs = [
-        make_home_breadcrumb('home'),
-        make_station_breadcrumb('station orders dashboard', station),
-        make_order_breadcrumb('make station order', station_order)
+        make_home_breadcrumb(),
+        make_station_breadcrumb(station),
+        make_order_breadcrumb(station_order),
     ]
 
     template = 'station_order_confirmation.html'
@@ -223,9 +223,9 @@ def station_order_summary(request, station_id, order_pk):
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
 
     breadcrumbs = [
-        make_home_breadcrumb('home'),
-        make_station_breadcrumb('station orders dashboard', station),
-        make_order_breadcrumb('make station order', station_order)
+        make_home_breadcrumb(),
+        make_station_breadcrumb(station),
+        make_order_breadcrumb(station_order),
     ]
 
     template = 'station_order_summary.html'
