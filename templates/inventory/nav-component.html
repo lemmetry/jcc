@@ -1,0 +1,18 @@
+<nav aria-label="breadcrumb">
+
+  <ol class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+      {% if forloop.last %}
+        <li class="breadcrumb-item my-auto active" aria-current="page">{{ breadcrumb.text }}</li>
+      {% else %}
+        <li class="breadcrumb-item my-auto"><a href={{ breadcrumb.link }}>{{ breadcrumb.text }}</a></li>
+      {% endif %}
+    {% endfor %}
+    <li class="ml-auto my-auto small">welcome, {{ user }}</li>
+    <a href="{% url "user sign out" %}"
+       class="btn btn-outline-primary btn-sm ml-2"
+       role="button">sign out
+    </a>
+  </ol>
+
+</nav>
