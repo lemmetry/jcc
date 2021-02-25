@@ -1,4 +1,4 @@
-from datetime import timezone
+from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
