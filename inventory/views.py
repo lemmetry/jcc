@@ -2,7 +2,7 @@ from datetime import timezone
 
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.template.loader import render_to_string
 
 from fleet.models import Station, Vehicle
@@ -15,7 +15,7 @@ from jcc.settings.base import JCC_EMAIL_FROM, JCC_EMAIL_TO
 
 @login_required
 def station_orders_dashboard(request, station_id):
-    station = Station.objects.get(station_id=station_id)
+    station = get_object_or_404(Station, station_id=station_id)
 
     if request.method == 'POST':
         new_station_order = StationOrder.objects.create(station=station)
@@ -45,10 +45,10 @@ def station_orders_dashboard(request, station_id):
 
 @login_required
 def make_station_order(request, station_id, order_pk):
-    station = Station.objects.all().filter(station_id=station_id)[0]
+    station = get_object_or_404(Station, station_id=station_id)
     station_name = station.get_name()
     station_fleet = Vehicle.objects.filter(station=station_id)
-    station_order = StationOrder.objects.get(pk=order_pk)
+    station_order = get_object_or_404(StationOrder, pk=order_pk)
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
@@ -72,13 +72,13 @@ def make_station_order(request, station_id, order_pk):
 
 @login_required
 def make_vehicle_order(request, station_id, order_pk, vehicle_path):
-    station = Station.objects.get(station_id=station_id)
+    station = get_object_or_404(Station, station_id=station_id)
     station_name = station.get_name()
-    station_order = StationOrder.objects.get(pk=order_pk)
+    station_order = get_object_or_404(StationOrder, pk=order_pk)
 
     vehicle_name = vehicle_path.replace('_', ' ')
     vehicle_name = vehicle_name.capitalize()
-    vehicle = Vehicle.objects.get(name=vehicle_name)
+    vehicle = get_object_or_404(Vehicle, name=vehicle_name)
 
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
     vehicle_bags = [vehicle_to_bag_association.bag
@@ -160,9 +160,9 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
 
 @login_required
 def station_order_confirmation(request, station_id, order_pk):
-    station = Station.objects.get(station_id=station_id)
+    station = get_object_or_404(Station, station_id=station_id)
     station_name = station.get_name()
-    station_order = StationOrder.objects.get(pk=order_pk)
+    station_order = get_object_or_404(StationOrder, pk=order_pk)
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
@@ -214,9 +214,9 @@ def station_order_confirmation(request, station_id, order_pk):
 
 @login_required
 def station_order_summary(request, station_id, order_pk):
-    station = Station.objects.get(station_id=station_id)
+    station = get_object_or_404(Station, station_id=station_id)
     station_name = station.get_name()
-    station_order = StationOrder.objects.get(pk=order_pk)
+    station_order = get_object_or_404(StationOrder, pk=order_pk)
     station_order_timestamp = station_order.timestamp
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
