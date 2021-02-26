@@ -140,8 +140,8 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
 
         template = 'make_vehicle_order.html'
         new_column_cutoffs = ['ETT Side',
-                              'Under Syringes',
                               'Left Outside Pocket',
+                              'Under Syringes - Inside Zipper',
                               'Top Outside Pouches',
                               'Top Outside Flap',
                               'Inside Bag Main']
