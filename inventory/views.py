@@ -139,12 +139,24 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
         ]
 
         template = 'make_vehicle_order.html'
-        new_column_cutoffs = ['ETT Side',
-                              'Left Outside Pocket',
-                              'Under Syringes - Inside Zipper',
-                              'Top Outside Pouches',
-                              'Top Outside Flap',
-                              'Inside Bag Main']
+        new_column_cutoffs = [
+            # for Red Bag
+            'ETT Side',
+            'Left Outside Pocket',
+            'Under Syringes - Inside Zipper',
+            # for Oxygen Bag
+            'Top Outside Pouch',
+            'Top Outside Flap',
+            'Inside Bag - Right Side',
+            # for Pediatric Bag
+            '6 - 9 kg Pouch (Pink/Red)',
+            '19 - 22 kg Pouch (Blue)',
+            'Front Pocket',
+            # for Perfusion Bag
+            'Center Upper Compartment',
+            'Center Lower Compartment',
+            'Left Compartment',
+        ]
         context = {
             'station_id': station_id,
             'order_pk': order_pk,
