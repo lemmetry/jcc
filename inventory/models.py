@@ -37,6 +37,9 @@ class BagCompartment(models.Model):
     def __str__(self):
         return '{} _in_ {}'.format(self.name, self.get_bag_name())
 
+    class Meta:
+        ordering = ['ordering']
+
 
 class BagCompartmentToItemAssociation(models.Model):
     # Defines quantity of the item in the bag compartment.
