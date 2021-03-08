@@ -20,6 +20,7 @@ deploy() {
   printf "\nStarting Django...\n"
   cd \$1/"$GITHUB_REPO_NAME" || exit 1
   pipenv install
+  pipenv run ./manage.py collectstatic --settings=jcc.settings.production
   pipenv run ./manage.py runserver --settings=jcc.settings.production routinemod.com:\$3
 }
 
