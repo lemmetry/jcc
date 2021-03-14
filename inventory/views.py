@@ -178,6 +178,9 @@ def station_order_confirmation(request, station_id, order_pk):
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
+    items_of_station_order_summed_and_alphabetized = dict(
+        sorted(items_of_station_order_summed_regardless_of_location.items())
+    )
 
     if request.method == 'POST':
         station_order.is_submitted = True
@@ -188,7 +191,7 @@ def station_order_confirmation(request, station_id, order_pk):
         email_context = {
             'station_name': station_name,
             'order_pk': order_pk,
-            'items_ordered': items_of_station_order_summed_regardless_of_location,
+            'items_ordered': items_of_station_order_summed_and_alphabetized,
             'order_timestamp': station_order_timestamp
         }
         email_subject = render_to_string(template_name='email_subject.txt',
@@ -218,7 +221,6 @@ def station_order_confirmation(request, station_id, order_pk):
         'order_pk': order_pk,
         'station_name': station_name,
         'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
-        'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location,
         'breadcrumbs': breadcrumbs
     }
     return render(request, template, context)
