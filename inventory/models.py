@@ -318,6 +318,10 @@ class StationOrder(models.Model):
 
         return items_summed_regardless_of_location
 
+    def alphabetize_items_for_delivery_copy(self):
+        items_summed_regardless_of_location = self.get_items_summed_regardless_of_location()
+        return dict(sorted(items_summed_regardless_of_location.items()))
+
     def __str__(self):
         return '%s %s %s' % (self.station.get_name(),
                              self.timestamp.strftime("%d %B, %Y at %H:%M:%S"),
