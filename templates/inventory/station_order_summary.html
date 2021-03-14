@@ -27,9 +27,9 @@
           </div>
 
           <div class="card-body">
-            {% if items_of_station_order_grouped_by_vehicle_then_bag %}
+            {% if station_copy_items %}
 
-              {% for vehicle, bag_dict in items_of_station_order_grouped_by_vehicle_then_bag.items %}
+              {% for vehicle, bag_dict in station_copy_items.items %}
 
                 <div class="row">
                   <div class="col-md-12">
@@ -82,7 +82,7 @@
           </div>
 
           <div class="card-body">
-            {% if items_of_station_order_summed_regardless_of_location %}
+            {% if delivery_copy_items %}
               <div class="row">
                 <div class="col-md-12">
                   <p class="card-text h5 text-center">Station #{{ station_id }}</p>
@@ -93,7 +93,7 @@
                 <div class="col-md-12">
 
                   <ul class="list-group list-group-flush">
-                    {% for item, quantity in items_of_station_order_summed_regardless_of_location.items %}
+                    {% for item, quantity in delivery_copy_items.items %}
                       <li class="list-group-item list-group-item-action">
                         <div class="row">
 

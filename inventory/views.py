@@ -233,6 +233,9 @@ def station_order_summary(request, station_id, order_pk):
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     items_of_station_order_summed_regardless_of_location = station_order.get_items_summed_regardless_of_location()
+    items_of_station_order_summed_and_alphabetized = dict(
+        sorted(items_of_station_order_summed_regardless_of_location.items())
+    )
 
     breadcrumbs = [
         make_home_breadcrumb(),
@@ -246,8 +249,8 @@ def station_order_summary(request, station_id, order_pk):
         'order_pk': order_pk,
         'station_name': station_name,
         'station_order_timestamp': station_order_timestamp,
-        'items_of_station_order_grouped_by_vehicle_then_bag': items_of_station_order_grouped_by_vehicle_then_bag,
-        'items_of_station_order_summed_regardless_of_location': items_of_station_order_summed_regardless_of_location,
+        'station_copy_items': items_of_station_order_grouped_by_vehicle_then_bag,
+        'delivery_copy_items': items_of_station_order_summed_and_alphabetized,
         'breadcrumbs': breadcrumbs
     }
     return render(request, template, context)
