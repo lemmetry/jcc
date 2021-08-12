@@ -21,7 +21,6 @@ def make_order_breadcrumb(station_order):
     return {
         'text': 'Order #%s' % station_order.pk,
         'link': reverse('make station order', kwargs={
-            'station_id': station_order.station.station_id,
             'order_pk': station_order.pk
         })
     }
