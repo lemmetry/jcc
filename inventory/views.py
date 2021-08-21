@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
@@ -81,6 +82,9 @@ def make_vehicle_order(request, order_pk, vehicle_path):
     vehicle_name = vehicle_path.replace('_', ' ')
     vehicle_name = vehicle_name.capitalize()
     vehicle = get_object_or_404(Vehicle, name=vehicle_name)
+
+    if vehicle.get_station_assigned() != station:
+        raise Http404()
 
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
     vehicle_bags = [vehicle_to_bag_association.bag
