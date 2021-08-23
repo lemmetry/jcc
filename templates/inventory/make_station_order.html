@@ -16,7 +16,7 @@
 
           {% for vehicle in station_fleet %}
             <div class="col-md-4 col-sm-6">
-              <a href="{% url 'make vehicle order' station_id=station_id order_pk=order_pk vehicle_path=vehicle.get_path %}">
+              <a href="{% url 'make vehicle order' order_pk=order_pk vehicle_path=vehicle.get_path %}">
 
                 <div class="card mb-4">
                   <div class="card-header text-center">
@@ -60,7 +60,7 @@
             </div> {# card-body #}
 
             <div class="card-footer text-center">
-              <a href="{% url "station order confirmation" station_id=station_id order_pk=order_pk %}"
+              <a href="{% url "station order confirmation" order_pk=order_pk %}"
                  class="btn btn-outline-dark"
                  role="button">Review and Submit
               </a>

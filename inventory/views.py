@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
@@ -44,11 +45,12 @@ def station_orders_dashboard(request, station_id):
 
 
 @login_required
-def make_station_order(request, station_id, order_pk):
-    station = get_object_or_404(Station, station_id=station_id)
-    station_name = station.get_name()
-    station_fleet = Vehicle.objects.filter(station=station_id)
+def make_station_order(request, order_pk):
     station_order = get_object_or_404(StationOrder, pk=order_pk)
+    station = station_order.station
+    station_name = station.get_name()
+    station_id = station.station_id
+    station_fleet = Vehicle.objects.filter(station=station_id)
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
@@ -71,14 +73,18 @@ def make_station_order(request, station_id, order_pk):
 
 
 @login_required
-def make_vehicle_order(request, station_id, order_pk, vehicle_path):
-    station = get_object_or_404(Station, station_id=station_id)
-    station_name = station.get_name()
+def make_vehicle_order(request, order_pk, vehicle_path):
     station_order = get_object_or_404(StationOrder, pk=order_pk)
+    station = station_order.station
+    station_name = station_order.station.get_name()
+    station_id = station.station_id
 
     vehicle_name = vehicle_path.replace('_', ' ')
     vehicle_name = vehicle_name.capitalize()
     vehicle = get_object_or_404(Vehicle, name=vehicle_name)
+
+    if vehicle.get_station_assigned() != station:
+        raise Http404()
 
     vehicle_to_bag_associations = vehicle.vehicletobagassociation_set.all()
     vehicle_bags = [vehicle_to_bag_association.bag
@@ -128,7 +134,7 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
             except ValueError:
                 pass
 
-        return redirect('make station order', station_id, order_pk)
+        return redirect('make station order', order_pk)
     else:
 
         breadcrumbs = [
@@ -171,10 +177,14 @@ def make_vehicle_order(request, station_id, order_pk, vehicle_path):
 
 
 @login_required
-def station_order_confirmation(request, station_id, order_pk):
-    station = get_object_or_404(Station, station_id=station_id)
-    station_name = station.get_name()
+def station_order_confirmation(request, order_pk):
     station_order = get_object_or_404(StationOrder, pk=order_pk)
+    if station_order.is_submitted:
+        return redirect('station order summary', order_pk)
+
+    station = station_order.station
+    station_name = station.get_name()
+    station_id = station.station_id
 
     station_order_items_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     station_order_items_organized_for_delivery = station_order.alphabetize_items_for_delivery_copy()
@@ -204,7 +214,7 @@ def station_order_confirmation(request, station_id, order_pk):
         email.attach_alternative(email_body_in_html, 'text/html')
         email.send()
 
-        return redirect('station order summary', station_id, order_pk)
+        return redirect('station order summary', order_pk)
 
     breadcrumbs = [
         make_home_breadcrumb(),
@@ -224,11 +234,15 @@ def station_order_confirmation(request, station_id, order_pk):
 
 
 @login_required
-def station_order_summary(request, station_id, order_pk):
-    station = get_object_or_404(Station, station_id=station_id)
-    station_name = station.get_name()
+def station_order_summary(request, order_pk):
     station_order = get_object_or_404(StationOrder, pk=order_pk)
+    if not station_order.is_submitted:
+        return redirect('station order confirmation', order_pk)
+
     station_order_timestamp = station_order.timestamp
+    station = station_order.station
+    station_name = station.get_name()
+    station_id = station.station_id
 
     station_copy_items = station_order.get_items_grouped_by_vehicle_then_bag()
     delivery_copy_items = station_order.alphabetize_items_for_delivery_copy()

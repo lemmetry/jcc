@@ -33,12 +33,12 @@
               <tr>
                 <td>
                   {% if station_order.is_submitted %}
-                    <a href="{% url 'station order summary' station_id=station_id order_pk=station_order.pk %}">
+                    <a href="{% url 'station order summary' order_pk=station_order.pk %}">
                       Order #{{ station_order.pk }} - submitted {{ station_order.timestamp.date|date:"l, m/d/y" }} at
                       {{ station_order.timestamp.time|date:"Hi" }}
                     </a>
                   {% else %}
-                    <a href="{% url 'make station order' station_id=station_id order_pk=station_order.pk %}">
+                    <a href="{% url 'make station order' order_pk=station_order.pk %}">
                       Order #{{ station_order.pk }} - {{ station_order.timestamp.date|date:"l, m/d/y" }}
                     </a>
                   {% endif %}
