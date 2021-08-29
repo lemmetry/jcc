@@ -1,0 +1,9 @@
+.make-order-input {
+    border: 1px solid darkgrey;
+    border-radius: 5px;
+    display: inline
+}
+
+.make-order-label {
+    display: inline;
+}

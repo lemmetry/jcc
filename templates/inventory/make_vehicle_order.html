@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% load static %}
+{% block extra_stylesheets %}
+  <link rel="stylesheet"
+        href="{% static "inventory/css/make_order.css" %}">
+{% endblock %}
+
 {% block title %}{{ vehicle_name }}{% endblock %}
 
 {% block nav-component %}
@@ -29,7 +35,7 @@
                data-parent="#bags_accordion">
             <div class="card-body">
               <div class="row">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-lg-4">
 
                   {% for bag_compartment in vehicle_bag.bagcompartment_set.all %}
                     <div class="text-center mb-1" style="background-color:lightgrey;">
@@ -37,30 +43,27 @@
                     </div>
 
                     {% for bag_compartment_to_item_association in bag_compartment.bagcompartmenttoitemassociation_set.all %}
-                      <div class="form-group row mb-0">
-                        <div class="col-sm-2">
-                          <input type="text" class="form-control form-control-sm"
-                                 id="input{{ bag_compartment_to_item_association.item.pk }}" placeholder=""
-                                 name="bagcompartmenttoitemassociation_{{ bag_compartment_to_item_association.pk }}">
-                        </div>
+                      <div class="form-group mb-2">
+                        <input type="text" class="make-order-input" size="1"
+                               id="input{{ bag_compartment_to_item_association.item.pk }}" placeholder=""
+                               name="bagcompartmenttoitemassociation_{{ bag_compartment_to_item_association.pk }}">
 
                         {# TODO use extend for them item block below x3 #}
-                        <div class="col-sm-10 pl-0">
-                          <label for="input{{ bag_compartment_to_item_association.item.pk }}"
-                                 class="col-form-label col-form-label">
-                            {{ bag_compartment_to_item_association.quantity }}x
-                            {{ bag_compartment_to_item_association.item.name }}
-                            {% if bag_compartment_to_item_association.item.size %},
-                              {{ bag_compartment_to_item_association.item.size }}
-                            {% endif %}
-                            {% if bag_compartment_to_item_association.item.notes %}
-                              ({{ bag_compartment_to_item_association.item.notes }})
-                            {% endif %}
-                            {% if bag_compartment_to_item_association.item.brand %}by
-                              {{ bag_compartment_to_item_association.item.brand }}
-                            {% endif %}
-                          </label>
-                        </div>
+                        <label for="input{{ bag_compartment_to_item_association.item.pk }}"
+                               class="make-order-label">
+                          {{ bag_compartment_to_item_association.quantity }}x
+                          {{ bag_compartment_to_item_association.item.name }}
+
+                          {% if bag_compartment_to_item_association.item.size %},
+                            {{ bag_compartment_to_item_association.item.size }}
+                          {% endif %}
+                          {% if bag_compartment_to_item_association.item.notes %}
+                            ({{ bag_compartment_to_item_association.item.notes }})
+                          {% endif %}
+                          {% if bag_compartment_to_item_association.item.brand %}by
+                            {{ bag_compartment_to_item_association.item.brand }}
+                          {% endif %}
+                        </label>
                       </div>
                     {% endfor %}
 
@@ -72,28 +75,26 @@
                       </div>
 
                       {% for kit_to_item_association in kit.kittoitemassociation_set.all %}
-                        <div class="form-group row mb-0">
-                          <div class="col-sm-2">
-                            <input type="text" class="form-control form-control-sm"
-                                   id="input{{ kit_to_item_association.item.pk }}" placeholder=""
-                                   name="kittoitemassociation_{{ kit_to_item_association.pk }}">
-                          </div>
-                          <div class="col-sm-10 pl-0">
-                            <label for="input{{ kit_to_item_association.item.pk }}"
-                                   class="col-form-label col-form-label">
-                              {{ kit_to_item_association.quantity }}x
-                              {{ kit_to_item_association.item.name }}
-                              {% if kit_to_item_association.item.size %},
-                                {{ kit_to_item_association.item.size }}
-                              {% endif %}
-                              {% if kit_to_item_association.item.notes %}
-                                ({{ kit_to_item_association.item.notes }})
-                              {% endif %}
-                              {% if kit_to_item_association.item.brand %}by
-                                {{ kit_to_item_association.item.brand }}
-                              {% endif %}
-                            </label>
-                          </div>
+                        <div class="form-group mb-2">
+                          <input type="text" class="make-order-input" size="1"
+                                 id="input{{ kit_to_item_association.item.pk }}" placeholder=""
+                                 name="kittoitemassociation_{{ kit_to_item_association.pk }}">
+
+                          <label for="input{{ kit_to_item_association.item.pk }}"
+                                 class="make-order-label">
+                            {{ kit_to_item_association.quantity }}x
+                            {{ kit_to_item_association.item.name }}
+
+                            {% if kit_to_item_association.item.size %},
+                              {{ kit_to_item_association.item.size }}
+                            {% endif %}
+                            {% if kit_to_item_association.item.notes %}
+                              ({{ kit_to_item_association.item.notes }})
+                            {% endif %}
+                            {% if kit_to_item_association.item.brand %}by
+                              {{ kit_to_item_association.item.brand }}
+                            {% endif %}
+                          </label>
                         </div>
                       {% endfor %}
 
@@ -105,34 +106,32 @@
                         </div>
 
                         {% for kit_compartment_to_item_association in kit_compartment.kitcompartmenttoitemassociation_set.all %}
-                          <div class="form-group row mb-0">
-                            <div class="col-sm-2">
-                              <input type="text" class="form-control form-control-sm"
-                                     id="input{{ kit_compartment_to_item_association.item.pk }}" placeholder=""
-                                     name="kitcompartmenttoitemassociation_{{ kit_compartment_to_item_association.pk }}">
-                            </div>
-                            <div class="col-sm-10 pl-0">
-                              <label for="input{{ kit_compartment_to_item_association.item.pk }}"
-                                     class="col-form-label col-form-label">
-                                {{ kit_compartment_to_item_association.quantity }}x
-                                {{ kit_compartment_to_item_association.item.name }}
-                                {% if kit_compartment_to_item_association.item.size %},
-                                  {{ kit_compartment_to_item_association.item.size }}
-                                {% endif %}
-                                {% if kit_compartment_to_item_association.item.notes %}
-                                  ({{ kit_compartment_to_item_association.item.notes }})
-                                {% endif %}
-                                {% if kit_compartment_to_item_association.item.brand %}by
-                                  {{ kit_compartment_to_item_association.item.brand }}
-                                {% endif %}
-                              </label>
-                            </div>
+                          <div class="form-group mb-2">
+                            <input type="text" class="make-order-input" size="1"
+                                   id="input{{ kit_compartment_to_item_association.item.pk }}" placeholder=""
+                                   name="kitcompartmenttoitemassociation_{{ kit_compartment_to_item_association.pk }}">
+
+                            <label for="input{{ kit_compartment_to_item_association.item.pk }}"
+                                   class="make-order-label">
+                              {{ kit_compartment_to_item_association.quantity }}x
+                              {{ kit_compartment_to_item_association.item.name }}
+
+                              {% if kit_compartment_to_item_association.item.size %},
+                                {{ kit_compartment_to_item_association.item.size }}
+                              {% endif %}
+                              {% if kit_compartment_to_item_association.item.notes %}
+                                ({{ kit_compartment_to_item_association.item.notes }})
+                              {% endif %}
+                              {% if kit_compartment_to_item_association.item.brand %}by
+                                {{ kit_compartment_to_item_association.item.brand }}
+                              {% endif %}
+                            </label>
                           </div>
                         {% endfor %}
 
                         {% if kit_compartment.name in new_column_cutoffs %}
                           </div>
-                          <div class="col-md-3 col-sm-6">
+                          <div class="col-lg-4">
                         {% endif %}
 
                       {% endfor %}  <!-- /kit>kit_compartment -->
@@ -140,7 +139,7 @@
 
                   {% if bag_compartment.name in new_column_cutoffs %}
                     </div>
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-lg-4">
                   {% endif %}
 
                   {% endfor %} <!-- /bag_compartment -->
