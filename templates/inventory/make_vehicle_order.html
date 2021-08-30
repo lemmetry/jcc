@@ -35,7 +35,7 @@
                data-parent="#bags_accordion">
             <div class="card-body">
               <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3 col-md-6">
 
                   {% for bag_compartment in vehicle_bag.bagcompartment_set.all %}
                     <div class="text-center mb-1" style="background-color:lightgrey;">
@@ -131,7 +131,7 @@
 
                         {% if kit_compartment.name in new_column_cutoffs %}
                           </div>
-                          <div class="col-lg-4">
+                          <div class="col-lg-3 col-md-6">
                         {% endif %}
 
                       {% endfor %}  <!-- /kit>kit_compartment -->
@@ -139,7 +139,7 @@
 
                   {% if bag_compartment.name in new_column_cutoffs %}
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3 col-md-6">
                   {% endif %}
 
                   {% endfor %} <!-- /bag_compartment -->
