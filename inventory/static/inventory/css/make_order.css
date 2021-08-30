@@ -1,9 +1,9 @@
-.make-order-input {
+.order-form-input {
     border: 1px solid darkgrey;
     border-radius: 5px;
     display: inline
 }
 
-.make-order-label {
+.order-form-label {
     display: inline;
 }

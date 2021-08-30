@@ -44,13 +44,13 @@
 
                     {% for bag_compartment_to_item_association in bag_compartment.bagcompartmenttoitemassociation_set.all %}
                       <div class="form-group mb-2">
-                        <input type="text" class="make-order-input" size="1"
+                        <input type="text" class="order-form-input" size="1"
                                id="input{{ bag_compartment_to_item_association.item.pk }}" placeholder=""
                                name="bagcompartmenttoitemassociation_{{ bag_compartment_to_item_association.pk }}">
 
                         {# TODO use extend for them item block below x3 #}
                         <label for="input{{ bag_compartment_to_item_association.item.pk }}"
-                               class="make-order-label">
+                               class="order-form-label">
                           {{ bag_compartment_to_item_association.quantity }}x
                           {{ bag_compartment_to_item_association.item.name }}
 
@@ -76,12 +76,12 @@
 
                       {% for kit_to_item_association in kit.kittoitemassociation_set.all %}
                         <div class="form-group mb-2">
-                          <input type="text" class="make-order-input" size="1"
+                          <input type="text" class="order-form-input" size="1"
                                  id="input{{ kit_to_item_association.item.pk }}" placeholder=""
                                  name="kittoitemassociation_{{ kit_to_item_association.pk }}">
 
                           <label for="input{{ kit_to_item_association.item.pk }}"
-                                 class="make-order-label">
+                                 class="order-form-label">
                             {{ kit_to_item_association.quantity }}x
                             {{ kit_to_item_association.item.name }}
 
@@ -107,12 +107,12 @@
 
                         {% for kit_compartment_to_item_association in kit_compartment.kitcompartmenttoitemassociation_set.all %}
                           <div class="form-group mb-2">
-                            <input type="text" class="make-order-input" size="1"
+                            <input type="text" class="order-form-input" size="1"
                                    id="input{{ kit_compartment_to_item_association.item.pk }}" placeholder=""
                                    name="kitcompartmenttoitemassociation_{{ kit_compartment_to_item_association.pk }}">
 
                             <label for="input{{ kit_compartment_to_item_association.item.pk }}"
-                                   class="make-order-label">
+                                   class="order-form-label">
                               {{ kit_compartment_to_item_association.quantity }}x
                               {{ kit_compartment_to_item_association.item.name }}
 
