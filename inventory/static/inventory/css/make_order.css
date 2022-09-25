@@ -1,0 +1,9 @@
+.order-form-input {
+    border: 1px solid darkgrey;
+    border-radius: 5px;
+    display: inline
+}
+
+.order-form-label {
+    display: inline;
+}
