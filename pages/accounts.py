@@ -1,6 +1,6 @@
-# TODO handle secrets as env variables
+from jcc.settings.base import JCC_TEST_ACCOUNT_USERNAME, JCC_TEST_ACCOUNT_PASSWORD
 
 
 class TestAccount:
-    username = 'test'
-    password = 'sMSp64kv72RE9Xk'
+    username = JCC_TEST_ACCOUNT_USERNAME
+    password = JCC_TEST_ACCOUNT_PASSWORD

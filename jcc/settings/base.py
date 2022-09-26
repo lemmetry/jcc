@@ -128,3 +128,7 @@ EMAIL_USE_TLS = os.environ['JCC_EMAIL_USE_TLS']
 # other env variables
 JCC_EMAIL_FROM = os.environ['JCC_EMAIL_FROM']
 JCC_EMAIL_TO = os.environ['JCC_EMAIL_TO']
+
+# testing
+JCC_TEST_ACCOUNT_USERNAME = os.environ['JCC_TEST_ACCOUNT_USERNAME']
+JCC_TEST_ACCOUNT_PASSWORD = os.environ['JCC_TEST_ACCOUNT_PASSWORD']
