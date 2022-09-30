@@ -1,6 +1,7 @@
 from pages.sign_in import SignInPage
 from pages.stations import StationsPage
 from pages.accounts import TestAccount
+from urllib.parse import urljoin
 
 
 def test_user_can_sign_in(browser):

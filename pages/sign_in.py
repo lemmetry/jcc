@@ -1,20 +1,17 @@
+from pages.base import BasePage
 from selenium.webdriver.common.by import By
 
 
-class SignInPage:
+class SignInPage(BasePage):
 
-    DOMAIN = 'http://localhost:8000'
     PATH = '/jcc/signin'
 
     USERNAME_FIELD_LOCATOR = (By.ID, 'inputUsername')
     PASSWORD_FIELD_LOCATOR = (By.ID, 'inputPassword')
     SIGN_IN_BUTTON_LOCATOR = (By.CSS_SELECTOR, 'button[type="submit"]')
 
-    def __init__(self, browser):
-        self.browser = browser
-
     def get_url(self):
-        return self.DOMAIN + self.PATH
+        return self.BASE_URL + self.PATH
 
     def load(self):
         url = self.get_url()
