@@ -9,12 +9,9 @@ class StationsPage(BasePage):
 
     WELCOME_USER_MESSAGE_LOCATOR = (By.CSS_SELECTOR, 'ol.breadcrumb li:nth-child(2)')
 
-    def get_url(self):
-        return self.BASE_URL + self.PATH
-
-    def load(self):
-        url = self.get_url()
-        self.browser.get(url)
+    def __init__(self, browser):
+        url = self.make_url(self.PATH)
+        BasePage.__init__(self, url, browser)
 
     def get_page_title(self):
         try:

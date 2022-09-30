@@ -1,7 +1,6 @@
 from pages.sign_in import SignInPage
 from pages.stations import StationsPage
 from pages.accounts import TestAccount
-from urllib.parse import urljoin
 
 
 def test_user_can_sign_in(browser):
@@ -30,7 +29,7 @@ def test_user_cant_sign_in_with_invalid_password(browser):
     sign_in_page.sign_in(username=username,
                          password=invalid_password)
 
-    sign_in_page_url = sign_in_page.get_url()
+    sign_in_page_url = sign_in_page.url
     assert browser.current_url == sign_in_page_url
 
     stations_page = StationsPage(browser)
