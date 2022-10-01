@@ -7,7 +7,7 @@ class StationsPage(BasePage):
 
     PATH = '/jcc/stations'
 
-    WELCOME_USER_MESSAGE_LOCATOR = (By.CSS_SELECTOR, 'ol.breadcrumb li:nth-child(2)')
+    WELCOME_USER_MESSAGE_LOCATOR = (By.ID, 'welcome_user_message')
 
     def __init__(self, browser):
         url = self.make_url(self.PATH)
