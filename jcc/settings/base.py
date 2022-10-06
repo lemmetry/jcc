@@ -118,6 +118,8 @@ USE_TZ = False
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # SendGrid SMTP
 EMAIL_HOST = os.environ['JCC_EMAIL_HOST']
 EMAIL_HOST_USER = os.environ['JCC_EMAIL_HOST_USER']
