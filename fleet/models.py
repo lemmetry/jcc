@@ -1,11 +1,12 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from inventory.models import Bag
+from django.templatetags.static import static
 
 
 class Station(models.Model):
     station_id = models.CharField(max_length=2)
-    logo = models.ImageField(upload_to='fleet/static/fleet/',
+    logo = models.ImageField(upload_to='fleet/',
                              blank=True,
                              null=True)
 
@@ -23,6 +24,11 @@ class Station(models.Model):
     def get_name(self):
         name = 'Station ' + self.station_id
         return name
+
+    def get_logo(self):
+        if self.logo:
+            return self.logo.url
+        return static('fleet/logo_jcc.png')
 
     def get_path(self):
         url = 'station_' + self.station_id
