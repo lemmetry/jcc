@@ -21,7 +21,7 @@ def station_orders_dashboard(request, station_id):
     if request.method == 'POST':
         new_station_order = StationOrder.objects.create(station=station)
         order_pk = new_station_order.pk
-        return redirect('make station order', station_id, order_pk)
+        return redirect('make station order', order_pk)
 
     else:
         station_name = station.get_name()
