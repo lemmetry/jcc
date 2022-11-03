@@ -5,7 +5,7 @@ import selenium.common.exceptions
 
 class StationsPage(BasePage):
 
-    PATH = '/jcc/stations'
+    PATH = '/'
 
     WELCOME_USER_MESSAGE_LOCATOR = (By.ID, 'welcome_user_message')
 
