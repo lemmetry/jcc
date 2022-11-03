@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 
 class SignInPage(BasePage):
 
-    PATH = '/jcc/signin'
+    PATH = '/signin'
 
     USERNAME_FIELD_LOCATOR = (By.ID, 'inputUsername')
     PASSWORD_FIELD_LOCATOR = (By.ID, 'inputPassword')
