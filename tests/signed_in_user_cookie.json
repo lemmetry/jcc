@@ -1,0 +1,10 @@
+{
+    "name": "sessionid",
+    "value": "9l2qewzheaot57f0qakov7jduia2yx8x",
+    "path": "/",
+    "domain": "localhost",
+    "secure": false,
+    "httpOnly": true,
+    "expiry": 1668714030,
+    "sameSite": "Lax"
+}
