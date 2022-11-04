@@ -62,8 +62,12 @@ def get_authentication_cookie(browser):
 
     if stations_page_title == 'Stations':
         cookie = browser.get_cookie('sessionid')
-        yield cookie
         browser.delete_all_cookies()
+        yield cookie
+    else:
+        raise ValueError('Sign-In Failed')
+
+    browser.quit()
 
 
 class TestSignInWithCookie:
@@ -73,16 +77,10 @@ class TestSignInWithCookie:
 
         cookie = get_authentication_cookie
 
-        # This is not supposed to work, but test passes
         browser.add_cookie({
-            "name": '123',
-            "value": '456'
+            "name": cookie["name"],
+            "value": cookie["value"]
         })
-
-        # browser.add_cookie({
-        #     "name": cookie["name"],
-        #     "value": cookie["value"]
-        # })
 
         stations_page = StationsPage(browser)
         stations_page.load()
