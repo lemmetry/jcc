@@ -1,7 +1,7 @@
 from pages.sign_in import SignInPage
 from pages.stations import StationsPage
 from pages.accounts import TestAccount
-import json
+import pytest
 
 
 def test_user_can_sign_in(browser):
@@ -46,7 +46,8 @@ def test_user_cant_sign_in_with_invalid_password(browser):
     assert browser.current_url == redirect_to_sign_in_url
 
 
-def test_get_authentication_cookie(browser):
+@pytest.fixture()
+def get_authentication_cookie(browser):
     sign_in_page = SignInPage(browser)
     sign_in_page.load()
 
@@ -59,32 +60,32 @@ def test_get_authentication_cookie(browser):
     stations_page = StationsPage(browser)
     stations_page_title = stations_page.get_page_title()
 
-    assert stations_page_title == 'Stations'
-
-    # Up to this point user successfully signed in. This was verified by opening the `stations_page`, which requires
-    # authentication. However, this is exactly what `test_user_can_sign_in` test does.
-    cookies = browser.get_cookie('sessionid')
-
-    # I believe it would make sense to get a new json file for every iteration of tests that require user to be
-    # authenticated.
-    with open('tests/signed_in_user_cookie.json', 'w', encoding='utf-8') as f:
-        json.dump(cookies, f, indent=4, ensure_ascii=False)
+    if stations_page_title == 'Stations':
+        cookie = browser.get_cookie('sessionid')
+        yield cookie
+        browser.delete_all_cookies()
 
 
-def test_sign_in_with_cookie(browser):
-    sign_in_page = SignInPage(browser)
-    sign_in_page.load()
+class TestSignInWithCookie:
+    def test_user_can_access_stations_page(self, browser, get_authentication_cookie):
+        sign_in_page = SignInPage(browser)
+        sign_in_page.load()
 
-    with open('tests/signed_in_user_cookie.json', 'r') as f:
-        cookie = json.load(f)
+        cookie = get_authentication_cookie
 
-    browser.add_cookie({
-        "name": cookie["name"],
-        "value": cookie["value"]
-    })
+        # This is not supposed to work, but test passes
+        browser.add_cookie({
+            "name": '123',
+            "value": '456'
+        })
 
-    stations_page = StationsPage(browser)
-    stations_page.load()
-    stations_page_title = stations_page.get_page_title()
+        # browser.add_cookie({
+        #     "name": cookie["name"],
+        #     "value": cookie["value"]
+        # })
 
-    assert stations_page_title == 'Stations'
+        stations_page = StationsPage(browser)
+        stations_page.load()
+        stations_page_title = stations_page.get_page_title()
+
+        assert stations_page_title == 'Stations'
