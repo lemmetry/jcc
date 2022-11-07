@@ -51,3 +51,12 @@ def test_signed_in_user_can_open_stations_page(authenticated_browser):
 
     stations_page_title = stations_page.get_page_title()
     assert stations_page_title == 'Stations'
+
+    welcome_user_message = stations_page.get_welcome_user_message()
+    assert 'welcome, ' in welcome_user_message
+
+    # TODO - replace hardcoded names below with actual data from the db
+    stations_names_in_db = ['Station 1', 'Station 2', 'Station 3', 'Station 4', 'Station 5', 'Station 6']
+
+    stations_names_on_the_page = stations_page.get_stations_names()
+    assert stations_names_in_db == stations_names_on_the_page
