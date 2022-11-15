@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 import selenium.common.exceptions
 
 
-class StationsPage(BasePage):
+class HomePage(BasePage):
 
     PATH = '/'
 

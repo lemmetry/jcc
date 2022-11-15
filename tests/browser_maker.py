@@ -1,10 +1,9 @@
-import pytest
 import selenium.webdriver
 from pages.sign_in import SignInPage
 from pages.accounts import TestAccount
 
 
-def make_browser():
+def make_default_browser():
     options = selenium.webdriver.FirefoxOptions()
     options.add_argument('headless')
     browser = selenium.webdriver.Firefox(options=options)
@@ -14,18 +13,12 @@ def make_browser():
     return browser
 
 
-@pytest.fixture
-def default_browser():
-    browser = make_browser()
+def make_authenticated_browser():
+    options = selenium.webdriver.FirefoxOptions()
+    options.add_argument('headless')
+    browser = selenium.webdriver.Firefox(options=options)
 
-    yield browser
-
-    browser.quit()
-
-
-@pytest.fixture
-def authenticated_browser():
-    browser = make_browser()
+    browser.implicitly_wait(10)
 
     sign_in_page = SignInPage(browser)
     sign_in_page.load()
@@ -39,8 +32,6 @@ def authenticated_browser():
     cookie = browser.get_cookie('sessionid')
 
     if cookie:
-        yield browser
-        browser.quit()
+        return browser
     else:
-        browser.quit()
         raise ValueError('Sign-In Failed')
