@@ -1,36 +1,57 @@
-from django.test import TestCase
+from django.test import LiveServerTestCase
+from django.contrib.auth.models import User
 from tests.browser_maker import make_default_browser
 from tests.browser_maker import make_authenticated_browser
+from fleet.models import Station
 from pages.home import HomePage
 
 
-class UserCanNotAccessHomepageWithoutSigningInTestCase(TestCase):
+class UserCanNotAccessHomepageWithoutSigningInTestCase(LiveServerTestCase):
     def setUp(self):
         self.browser = make_default_browser()
-        home_page = HomePage(self.browser)
-        home_page.load()
 
     def tearDown(self):
         self.browser.quit()
 
     def test_user_can_not_access_homepage_without_signing_in(self):
-        self.assertEqual(self.browser.current_url, 'http://localhost:8000/signin?next=/')
+        homepage = HomePage(browser=self.browser,
+                            live_server_url=self.live_server_url)
+        homepage.load()
+
+        redirect_to_sign_in_url = '%s%s' % (self.live_server_url, '/signin?next=/')
+        self.assertEqual(self.browser.current_url, redirect_to_sign_in_url)
 
 
-class UserWithValidCredentialsCanAccessHomepageTestCase(TestCase):
+class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
     def setUp(self):
-        self.browser = make_authenticated_browser()
-        self.homepage = HomePage(self.browser)
-        self.homepage.load()
+        username = 'test_user'
+        password = 'Pa$$w0rd'
+        User.objects.create_user(username=username,
+                                 password=password)
+
+        Station.objects.bulk_create([
+            Station(station_id=i) for i in range(1, 7)
+        ])
+
+        self.browser = make_authenticated_browser(live_server_url=self.live_server_url,
+                                                  username=username,
+                                                  password=password)
 
     def tearDown(self):
         self.browser.quit()
 
     def test_user_with_valid_Credentials_Can_access_homepage(self):
-        page_title = self.homepage.get_page_title()
+        homepage = HomePage(browser=self.browser,
+                            live_server_url=self.live_server_url)
+        homepage.load()
+        self.assertEqual(self.browser.current_url, '%s%s' % (self.live_server_url, '/'))
+
+        page_title = homepage.get_page_title()
         self.assertEqual(page_title, 'Stations')
 
-        welcome_user_message = self.homepage.get_welcome_user_message()
+        welcome_user_message = homepage.get_welcome_user_message()
         self.assertIn('welcome, ', welcome_user_message)
 
-        # TODO assess stations displayed
+        stations_names_in_db = [station.get_name() for station in Station.objects.all()]
+        stations_names_on_the_page = homepage.get_stations_names()
+        self.assertListEqual(stations_names_in_db, stations_names_on_the_page)

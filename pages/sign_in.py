@@ -10,8 +10,8 @@ class SignInPage(BasePage):
     PASSWORD_FIELD_LOCATOR = (By.ID, 'inputPassword')
     SIGN_IN_BUTTON_LOCATOR = (By.CSS_SELECTOR, 'button[type="submit"]')
 
-    def __init__(self, browser):
-        url = self.make_url(self.PATH)
+    def __init__(self, browser, live_server_url):
+        url = live_server_url + self.PATH
         BasePage.__init__(self, url, browser)
 
     def sign_in(self, username, password):

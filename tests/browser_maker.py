@@ -1,6 +1,5 @@
 import selenium.webdriver
 from pages.sign_in import SignInPage
-from pages.accounts import TestAccount
 
 
 def make_default_browser():
@@ -13,19 +12,12 @@ def make_default_browser():
     return browser
 
 
-def make_authenticated_browser():
-    options = selenium.webdriver.FirefoxOptions()
-    options.add_argument('headless')
-    browser = selenium.webdriver.Firefox(options=options)
+def make_authenticated_browser(live_server_url, username, password):
+    browser = make_default_browser()
 
-    browser.implicitly_wait(10)
-
-    sign_in_page = SignInPage(browser)
+    sign_in_page = SignInPage(browser=browser,
+                              live_server_url=live_server_url)
     sign_in_page.load()
-
-    username = TestAccount.username
-    password = TestAccount.password
-
     sign_in_page.sign_in(username=username,
                          password=password)
 

@@ -10,8 +10,8 @@ class HomePage(BasePage):
     WELCOME_USER_MESSAGE_LOCATOR = (By.ID, 'welcome_user_message')
     STATIONS_NAMES_LOCATOR = (By.ID, 'station_name')
 
-    def __init__(self, browser):
-        url = self.make_url(self.PATH)
+    def __init__(self, browser, live_server_url):
+        url = live_server_url + self.PATH
         BasePage.__init__(self, url, browser)
 
     def get_page_title(self):
