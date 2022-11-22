@@ -26,8 +26,8 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
     def setUp(self):
         username = 'test_user'
         password = 'Pa$$w0rd'
-        User.objects.create_user(username=username,
-                                 password=password)
+        self.test_user = User.objects.create_user(username=username,
+                                                  password=password)
 
         Station.objects.bulk_create([
             Station(station_id=i) for i in range(1, 7)
@@ -50,7 +50,7 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
         self.assertEqual(page_title, 'Stations')
 
         welcome_user_message = homepage.get_welcome_user_message()
-        self.assertIn('welcome, ', welcome_user_message)
+        self.assertEqual(f'welcome, {self.test_user.username}', welcome_user_message)
 
         stations_names_in_db = [station.get_name() for station in Station.objects.all()]
         stations_names_on_the_page = homepage.get_stations_names()
