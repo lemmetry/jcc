@@ -16,4 +16,4 @@
 - Site itself: http://localhost:8000/jcc/stations
 
 ## How to run tests:
-`pipenv run python -m pytest`
+`pipenv run python manage.py test --settings=jcc.settings.development`
