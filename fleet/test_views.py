@@ -52,6 +52,11 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
         welcome_user_message = homepage.get_welcome_user_message()
         self.assertEqual(f'welcome, {self.test_user.username}', welcome_user_message)
 
+        stations_logos = homepage.get_stations_logos()
+        self.assertEqual(len(stations_logos), 6)
+        for station_logo in stations_logos:
+            self.assertTrue(station_logo.is_displayed)
+
         stations_names_in_db = [station.get_name() for station in Station.objects.all()]
         stations_names_on_the_page = homepage.get_stations_names()
         self.assertListEqual(stations_names_in_db, stations_names_on_the_page)

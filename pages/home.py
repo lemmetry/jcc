@@ -8,6 +8,9 @@ class HomePage(BasePage):
     PATH = '/'
 
     WELCOME_USER_MESSAGE_LOCATOR = (By.ID, 'welcome_user_message')
+    STATIONS_LOGOS_LOCATOR = (By.CLASS_NAME, 'station_logo')
+
+    #TODO ID attribute MUST be unique
     STATIONS_NAMES_LOCATOR = (By.ID, 'station_name')
 
     def __init__(self, browser, base_url):
@@ -24,6 +27,12 @@ class HomePage(BasePage):
         try:
             welcome_user_message_field = self.browser.find_element(*self.WELCOME_USER_MESSAGE_LOCATOR)
             return welcome_user_message_field.text
+        except selenium.common.exceptions.NoSuchElementException:
+            return None
+
+    def get_stations_logos(self):
+        try:
+            return self.browser.find_elements(*self.STATIONS_LOGOS_LOCATOR)
         except selenium.common.exceptions.NoSuchElementException:
             return None
 
