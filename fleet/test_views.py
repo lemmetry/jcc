@@ -40,7 +40,7 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def test_user_with_valid_Credentials_Can_access_homepage(self):
+    def test_user_with_valid_credentials_can_access_homepage(self):
         homepage = HomePage(browser=self.browser,
                             live_server_url=self.live_server_url)
         homepage.load()
