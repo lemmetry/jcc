@@ -9,9 +9,7 @@ class HomePage(BasePage):
 
     WELCOME_USER_MESSAGE_LOCATOR = (By.ID, 'welcome_user_message')
     STATIONS_LOGOS_LOCATOR = (By.CLASS_NAME, 'station_logo')
-
-    #TODO ID attribute MUST be unique
-    STATIONS_NAMES_LOCATOR = (By.ID, 'station_name')
+    STATIONS_NAMES_LOCATOR = (By.CLASS_NAME, 'station_name')
 
     def __init__(self, browser, base_url):
         url = base_url + self.PATH
