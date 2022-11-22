@@ -12,11 +12,11 @@ def make_default_browser():
     return browser
 
 
-def make_authenticated_browser(live_server_url, username, password):
+def make_authenticated_browser(base_url, username, password):
     browser = make_default_browser()
 
     sign_in_page = SignInPage(browser=browser,
-                              live_server_url=live_server_url)
+                              base_url=base_url)
     sign_in_page.load()
     sign_in_page.sign_in(username=username,
                          password=password)

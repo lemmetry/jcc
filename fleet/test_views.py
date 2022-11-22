@@ -15,7 +15,7 @@ class UserCanNotAccessHomepageWithoutSigningInTestCase(LiveServerTestCase):
 
     def test_user_can_not_access_homepage_without_signing_in(self):
         homepage = HomePage(browser=self.browser,
-                            live_server_url=self.live_server_url)
+                            base_url=self.live_server_url)
         homepage.load()
 
         redirect_to_sign_in_url = '%s%s' % (self.live_server_url, '/signin?next=/')
@@ -33,7 +33,7 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
             Station(station_id=i) for i in range(1, 7)
         ])
 
-        self.browser = make_authenticated_browser(live_server_url=self.live_server_url,
+        self.browser = make_authenticated_browser(base_url=self.live_server_url,
                                                   username=username,
                                                   password=password)
 
@@ -42,7 +42,7 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
 
     def test_user_with_valid_credentials_can_access_homepage(self):
         homepage = HomePage(browser=self.browser,
-                            live_server_url=self.live_server_url)
+                            base_url=self.live_server_url)
         homepage.load()
         self.assertEqual(self.browser.current_url, '%s%s' % (self.live_server_url, '/'))
 
