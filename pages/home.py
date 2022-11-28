@@ -10,6 +10,7 @@ class HomePage(BasePage):
     WELCOME_USER_MESSAGE_LOCATOR = (By.ID, 'welcome_user_message')
     STATIONS_LOGOS_LOCATOR = (By.CLASS_NAME, 'station_logo')
     STATIONS_NAMES_LOCATOR = (By.CLASS_NAME, 'station_name')
+    STATIONS_LINKS_LOCATORS = (By.CSS_SELECTOR, '.station_container > a')
 
     def __init__(self, browser, base_url):
         url = base_url + self.PATH
@@ -38,5 +39,12 @@ class HomePage(BasePage):
         try:
             station_names_fields = self.browser.find_elements(*self.STATIONS_NAMES_LOCATOR)
             return [station_names.text for station_names in station_names_fields]
+        except selenium.common.exceptions.NoSuchElementException:
+            return None
+
+    def get_stations_urls(self):
+        try:
+            stations_links_elements = self.browser.find_elements(*self.STATIONS_LINKS_LOCATORS)
+            return [station_link.get_attribute('href') for station_link in stations_links_elements]
         except selenium.common.exceptions.NoSuchElementException:
             return None

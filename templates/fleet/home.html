@@ -13,7 +13,7 @@
     <div class="row">
       {% for station in stations %}
 
-        <div class="col-md-4 col-sm-6">
+        <div class="col-md-4 col-sm-6 station_container">
           <a href="{% url 'station orders dashboard' station_id=station.id %}">
             <div class="card mb-4">
 
