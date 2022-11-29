@@ -7,7 +7,7 @@ class HomePage(BasePage):
 
     PATH = '/'
 
-    WELCOME_USER_MESSAGE_LOCATOR = (By.ID, 'welcome_user_message')
+    SIGNED_IN_USER_LOCATOR = (By.ID, 'signed_in_user')
     STATION_CONTAINER_LOCATOR = (By.CLASS_NAME, 'station_container')
     STATION_LINK_LOCATOR = (By.CLASS_NAME, 'station_link')
     STATION_LOGO_LOCATOR = (By.CLASS_NAME, 'station_logo')
@@ -23,10 +23,10 @@ class HomePage(BasePage):
         except selenium.common.exceptions.NoSuchElementException:
             return None
 
-    def get_welcome_user_message(self):
+    def get_signed_in_user(self):
         try:
-            welcome_user_message_field = self.browser.find_element(*self.WELCOME_USER_MESSAGE_LOCATOR)
-            return welcome_user_message_field.text
+            signed_in_user_element = self.browser.find_element(*self.SIGNED_IN_USER_LOCATOR)
+            return signed_in_user_element.text
         except selenium.common.exceptions.NoSuchElementException:
             return None
 
