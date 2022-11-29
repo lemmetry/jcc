@@ -28,10 +28,8 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
         password = 'Pa$$w0rd'
         self.test_user = User.objects.create_user(username=username,
                                                   password=password)
-
-        Station.objects.bulk_create([
-            Station(station_id=i) for i in range(1, 7)
-        ])
+        Station.objects.create(station_id=1)
+        Station.objects.create(station_id=2)
 
         self.browser = make_authenticated_browser(base_url=self.live_server_url,
                                                   username=username,
@@ -53,7 +51,7 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
         self.assertEqual(self.test_user.username, signed_in_user)
 
         stations = homepage.get_stations()
-        self.assertEqual(len(stations), 6)
+        self.assertEqual(len(stations), 2)
 
         stations_logos = [station['logo_src'] for station in stations]
         for station_logo in stations_logos:
