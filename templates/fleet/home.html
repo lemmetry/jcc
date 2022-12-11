@@ -14,7 +14,7 @@
       {% for station in stations %}
 
         <div class="col-md-4 col-sm-6 station_container">
-          <a href="{% url 'station orders dashboard' station_id=station.id %}"
+          <a href="{% url 'station orders dashboard' station_pk=station.pk %}"
              class="station_link">
             <div class="card mb-4">
 

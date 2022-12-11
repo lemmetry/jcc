@@ -15,8 +15,8 @@ from jcc.settings.base import JCC_EMAIL_FROM, JCC_EMAIL_TO
 
 
 @login_required
-def station_orders_dashboard(request, station_id):
-    station = get_object_or_404(Station, station_id=station_id)
+def station_orders_dashboard(request, station_pk):
+    station = get_object_or_404(Station, pk=station_pk)
 
     if request.method == 'POST':
         new_station_order = StationOrder.objects.create(station=station)
@@ -36,7 +36,6 @@ def station_orders_dashboard(request, station_id):
 
     template = 'station_orders_dashboard.html'
     context = {
-        'station_id': station_id,
         'station_name': station_name,
         'last_five_station_orders': last_five_station_orders,
         'breadcrumbs': breadcrumbs
@@ -49,8 +48,8 @@ def make_station_order(request, order_pk):
     station_order = get_object_or_404(StationOrder, pk=order_pk)
     station = station_order.station
     station_name = station.get_name()
-    station_id = station.station_id
-    station_fleet = Vehicle.objects.filter(station=station_id)
+    station_pk = station.pk
+    station_fleet = Vehicle.objects.filter(station=station_pk)
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
@@ -62,7 +61,7 @@ def make_station_order(request, order_pk):
 
     template = 'make_station_order.html'
     context = {
-        'station_id': station_id,
+        'station_pk': station_pk,
         'order_pk': order_pk,
         'station_name': station_name,
         'station_fleet': station_fleet,
@@ -77,7 +76,6 @@ def make_vehicle_order(request, order_pk, vehicle_path):
     station_order = get_object_or_404(StationOrder, pk=order_pk)
     station = station_order.station
     station_name = station_order.station.get_name()
-    station_id = station.station_id
 
     vehicle_name = vehicle_path.replace('_', ' ')
     vehicle_name = vehicle_name.capitalize()
@@ -164,7 +162,7 @@ def make_vehicle_order(request, order_pk, vehicle_path):
             'Left Compartment',
         ]
         context = {
-            'station_id': station_id,
+            'station_pk': station.pk,
             'order_pk': order_pk,
             'station_name': station_name,
             'vehicle_name': vehicle_name,
@@ -184,7 +182,6 @@ def station_order_confirmation(request, order_pk):
 
     station = station_order.station
     station_name = station.get_name()
-    station_id = station.station_id
 
     station_order_items_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
     station_order_items_organized_for_delivery = station_order.alphabetize_items_for_delivery_copy()
@@ -224,7 +221,7 @@ def station_order_confirmation(request, order_pk):
 
     template = 'station_order_confirmation.html'
     context = {
-        'station_id': station_id,
+        'station_pk': station.pk,
         'order_pk': order_pk,
         'station_name': station_name,
         'station_order_items_grouped_by_vehicle_then_bag': station_order_items_grouped_by_vehicle_then_bag,
@@ -242,7 +239,6 @@ def station_order_summary(request, order_pk):
     station_order_timestamp = station_order.timestamp
     station = station_order.station
     station_name = station.get_name()
-    station_id = station.station_id
 
     station_copy_items = station_order.get_items_grouped_by_vehicle_then_bag()
     delivery_copy_items = station_order.alphabetize_items_for_delivery_copy()
@@ -255,7 +251,7 @@ def station_order_summary(request, order_pk):
 
     template = 'station_order_summary.html'
     context = {
-        'station_id': station_id,
+        'station_pk': station.pk,
         'order_pk': order_pk,
         'station_name': station_name,
         'station_order_timestamp': station_order_timestamp,

@@ -2,7 +2,7 @@ from django.urls import path
 from inventory import views as inventory_views
 
 urlpatterns = [
-    path('stations/<int:station_id>/orders', inventory_views.station_orders_dashboard,
+    path('stations/<int:station_pk>/orders', inventory_views.station_orders_dashboard,
          name='station orders dashboard'),
 
     path('orders/<int:order_pk>', inventory_views.make_station_order,

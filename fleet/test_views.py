@@ -28,8 +28,8 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
         password = 'Pa$$w0rd'
         self.test_user = User.objects.create_user(username=username,
                                                   password=password)
-        Station.objects.create(station_id=1)
-        Station.objects.create(station_id=2)
+        for i in range(2):
+            Station.objects.create()
 
         self.browser = make_authenticated_browser(base_url=self.live_server_url,
                                                   username=username,

@@ -85,7 +85,7 @@
             {% if delivery_copy_items %}
               <div class="row">
                 <div class="col-md-12">
-                  <p class="card-text h5 text-center">Station #{{ station_id }}</p>
+                  <p class="card-text h5 text-center">{{ station_name }}</p>
                 </div>
               </div>
 
@@ -125,7 +125,7 @@
 
   <div class="row pt-3">
     <div class="col-md-6" style="float:none; margin:auto; text-align: center">
-      <a href="{% url 'station orders dashboard' station_id=station_id %}"
+      <a href="{% url 'station orders dashboard' station_pk=station_pk %}"
          class="btn btn-outline-dark"
          role="button">Back
       </a>
