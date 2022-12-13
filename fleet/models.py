@@ -28,9 +28,6 @@ class Station(models.Model):
             return self.logo.url
         return static('fleet/logo_jcc.png')
 
-    def get_path(self):
-        return f'station_{self.pk}'
-
     def __str__(self):
         return self.get_name()
 
