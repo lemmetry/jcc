@@ -48,8 +48,7 @@ def make_station_order(request, order_pk):
     station_order = get_object_or_404(StationOrder, pk=order_pk)
     station = station_order.station
     station_name = station.get_name()
-    station_pk = station.pk
-    station_fleet = Vehicle.objects.filter(station=station_pk)
+    station_fleet = Vehicle.objects.filter(station=station.pk)
 
     items_of_station_order_grouped_by_vehicle_then_bag = station_order.get_items_grouped_by_vehicle_then_bag()
 
@@ -61,7 +60,7 @@ def make_station_order(request, order_pk):
 
     template = 'make_station_order.html'
     context = {
-        'station_pk': station_pk,
+        'station_pk': station.pk,
         'order_pk': order_pk,
         'station_name': station_name,
         'station_fleet': station_fleet,

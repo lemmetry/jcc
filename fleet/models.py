@@ -5,6 +5,7 @@ from django.templatetags.static import static
 
 
 class Station(models.Model):
+    number = models.IntegerField(unique=True)
     logo = models.ImageField(upload_to='fleet/',
                              blank=True,
                              null=True)
@@ -21,7 +22,7 @@ class Station(models.Model):
         return
 
     def get_name(self):
-        return f'Station {self.pk}'
+        return f'Station {self.number}'
 
     def get_logo(self):
         if self.logo:

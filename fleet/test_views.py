@@ -28,8 +28,8 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
         password = 'Pa$$w0rd'
         self.test_user = User.objects.create_user(username=username,
                                                   password=password)
-        for i in range(2):
-            Station.objects.create()
+        Station.objects.create(number=7)
+        Station.objects.create(number=4)
 
         self.browser = make_authenticated_browser(base_url=self.live_server_url,
                                                   username=username,
@@ -57,7 +57,7 @@ class UserWithValidCredentialsCanAccessHomepageTestCase(LiveServerTestCase):
         for station_logo in stations_logos:
             self.assertEqual(station_logo, f'{self.live_server_url}/static/fleet/logo_jcc.png')
 
-        stations_names_in_db = [station.get_name() for station in Station.objects.all()]
+        stations_names_in_db = [station.get_name() for station in Station.objects.all().order_by('number')]
         stations_names_on_the_page = [station['name'] for station in stations]
         self.assertListEqual(stations_names_in_db, stations_names_on_the_page)
 
