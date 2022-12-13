@@ -7,8 +7,11 @@ class HomePage(BasePage):
 
     PATH = '/'
 
-    WELCOME_USER_MESSAGE_LOCATOR = (By.ID, 'welcome_user_message')
-    STATIONS_NAMES_LOCATOR = (By.ID, 'station_name')
+    SIGNED_IN_USER_LOCATOR = (By.ID, 'signed_in_user')
+    STATION_CONTAINER_LOCATOR = (By.CLASS_NAME, 'station_container')
+    STATION_LINK_LOCATOR = (By.CLASS_NAME, 'station_link')
+    STATION_LOGO_LOCATOR = (By.CLASS_NAME, 'station_logo')
+    STATION_NAME_LOCATOR = (By.CLASS_NAME, 'station_name')
 
     def __init__(self, browser, base_url):
         url = base_url + self.PATH
@@ -20,16 +23,25 @@ class HomePage(BasePage):
         except selenium.common.exceptions.NoSuchElementException:
             return None
 
-    def get_welcome_user_message(self):
+    def get_signed_in_user(self):
         try:
-            welcome_user_message_field = self.browser.find_element(*self.WELCOME_USER_MESSAGE_LOCATOR)
-            return welcome_user_message_field.text
+            signed_in_user_element = self.browser.find_element(*self.SIGNED_IN_USER_LOCATOR)
+            return signed_in_user_element.text
         except selenium.common.exceptions.NoSuchElementException:
             return None
 
-    def get_stations_names(self):
-        try:
-            station_names_fields = self.browser.find_elements(*self.STATIONS_NAMES_LOCATOR)
-            return [station_names.text for station_names in station_names_fields]
-        except selenium.common.exceptions.NoSuchElementException:
-            return None
+    def get_stations(self):
+        stations = []
+        stations_elements = self.browser.find_elements(*self.STATION_CONTAINER_LOCATOR)
+
+        for station_element in stations_elements:
+            station_link_element = station_element.find_element(*self.STATION_LINK_LOCATOR)
+            station_logo_element = station_element.find_element(*self.STATION_LOGO_LOCATOR)
+            station_name_element = station_element.find_element(*self.STATION_NAME_LOCATOR)
+            stations.append({
+                'name': station_name_element.text,
+                'url': station_link_element.get_attribute('href'),
+                'logo_src': station_logo_element.get_attribute('src')
+            })
+
+        return stations

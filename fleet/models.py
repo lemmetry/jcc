@@ -5,7 +5,7 @@ from django.templatetags.static import static
 
 
 class Station(models.Model):
-    station_id = models.CharField(max_length=2)
+    number = models.IntegerField(unique=True)
     logo = models.ImageField(upload_to='fleet/',
                              blank=True,
                              null=True)
@@ -22,17 +22,12 @@ class Station(models.Model):
         return
 
     def get_name(self):
-        name = 'Station ' + self.station_id
-        return name
+        return f'Station {self.number}'
 
     def get_logo(self):
         if self.logo:
             return self.logo.url
         return static('fleet/logo_jcc.png')
-
-    def get_path(self):
-        url = 'station_' + self.station_id
-        return url
 
     def __str__(self):
         return self.get_name()

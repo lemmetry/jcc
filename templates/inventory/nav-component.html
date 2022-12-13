@@ -8,7 +8,9 @@
         <li class="breadcrumb-item my-auto"><a href={{ breadcrumb.link }}>{{ breadcrumb.text }}</a></li>
       {% endif %}
     {% endfor %}
-    <li class="ml-auto my-auto small" id="welcome_user_message">welcome, {{ user }}</li>
+    <li class="ml-auto my-auto small">
+      welcome, <span id="signed_in_user">{{ user }}</span>
+    </li>
     <a href="{% url "user sign out" %}"
        class="btn btn-outline-primary btn-sm ml-2"
        role="button">sign out

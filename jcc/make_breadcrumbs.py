@@ -12,7 +12,7 @@ def make_station_breadcrumb(station):
     return {
         'text': station.get_name(),
         'link': reverse('station orders dashboard', kwargs={
-            'station_id': station.station_id
+            'station_pk': station.pk
         })
     }
 

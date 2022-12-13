@@ -13,17 +13,18 @@
     <div class="row">
       {% for station in stations %}
 
-        <div class="col-md-4 col-sm-6">
-          <a href="{% url 'station orders dashboard' station_id=station.id %}">
+        <div class="col-md-4 col-sm-6 station_container">
+          <a href="{% url 'station orders dashboard' station_pk=station.pk %}"
+             class="station_link">
             <div class="card mb-4">
 
                 <img src="{{ station.get_logo }}"
-                     class="img-responsive mx-auto mt-4"
+                     class="img-responsive mx-auto mt-4 station_logo"
                      alt="{{ station.get_name }} logo"
                      height="200">
 
                 <div class="card-body">
-                  <h5 class="card-title text-center" id="station_name">
+                  <h5 class="card-title text-center station_name">
                     {{ station.get_name }}
                   </h5>
                 </div>

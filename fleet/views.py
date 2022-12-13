@@ -27,7 +27,7 @@ def user_sign_out(request):
 
 @login_required
 def home(request):
-    stations = Station.objects.all()
+    stations = Station.objects.all().order_by('number')
     user = request.user
 
     breadcrumbs = [
